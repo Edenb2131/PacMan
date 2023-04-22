@@ -22,6 +22,8 @@ public:
     int get_move_speed() const { return move_speed; }
     int get_x_pos() const { return x_pos; }
     int get_y_pos() const { return y_pos; }
+    char get_direction() const { return direction; }
+
 
     void set_lives(int _lives) { this->lives = _lives; }
     void set_move_speed(int _move_speed) { this->move_speed = _move_speed; }

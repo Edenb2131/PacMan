@@ -2,6 +2,8 @@
 // Created by Eden Bar on 21/04/2023.
 //
 
+#include <Windows.h>
+#include <conio.h>
 #include <iostream>
 using namespace std;
 
@@ -11,6 +13,9 @@ using namespace std;
 #include "Ghost.h"
 #include "Pacman.h"
 
+void gotoxy(int x, int y);               // prototype
+void clrscr();                           // prototype
+bool check_if_hit_boarder(int x, int y); // prototype
 
 void Game::print_menu() {
     // Present the menu
@@ -18,13 +23,12 @@ void Game::print_menu() {
     cout << "1. Start a new Game" << endl;
     cout << "2. Present instructions and keys" << endl;
     cout << "3. Quit" << endl;
-
 }
 
 Game::Game() {
     print_menu();
-    int choice = get_players_choice();
-
+   // int choice = get_players_choice();
+    int choice = 1;
     while (true) {
         // Start a new game
         if (choice == 1)
@@ -57,12 +61,40 @@ int Game::get_players_choice() {
 
 void Game::start() {
     // Start the game
+    system("cls");
+
     Board board;
-    board.print();
     Pacman pacman;
+
+    board.print();
+    //flushall();
+
+    int x = pacman.get_x_pos();
+    int y = pacman.get_y_pos();
+
     while (pacman.get_lives() > 0) {
-        //        pacman.move();
-        //        board.print();
+
+        while (!kbhit()) {
+
+            char d = pacman.get_direction();
+
+
+
+
+            gotoxy(x, y);
+            cout << "@" << endl;
+            Sleep(100);
+
+            gotoxy(x, y);
+            cout << " " << endl;
+
+            ++x;
+            ++y;
+
+
+            
+
+        }
     }
 
 }
@@ -78,9 +110,33 @@ void Game::print_InstAndKeys() {
     cout << "   A arrow - move left" << endl;
     cout << "   D arrow - move right" << endl;
     cout << "   S arrow - stay" << endl;
-
 }
 
 
 
 
+// function definition -- requires windows.h
+void gotoxy(int x, int y)
+{
+    HANDLE hConsoleOutput;
+    COORD dwCursorPosition;
+    cout.flush();
+    dwCursorPosition.X = x;
+    dwCursorPosition.Y = y;
+    hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleCursorPosition(hConsoleOutput, dwCursorPosition);
+}
+
+// function definition -- requires process.h
+void clrscr()
+{
+    system("cls");
+}
+
+
+
+
+bool check_if_hit_boarder(int x, int y) {
+
+
+}
