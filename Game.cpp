@@ -15,7 +15,7 @@ using namespace std;
 
 void gotoxy(int x, int y);               // prototype
 void clrscr();                           // prototype
-bool check_if_hit_boarder(int x, int y); // prototype
+bool check_if_hit_boarder(int x, int y ,Board &board); // prototype
 
 void Game::print_menu() {
     // Present the menu
@@ -77,9 +77,7 @@ void Game::start() {
         while (!kbhit()) {
 
             char d = pacman.get_direction();
-
-
-
+            
 
             gotoxy(x, y);
             cout << "@" << endl;
@@ -91,7 +89,7 @@ void Game::start() {
             ++x;
             ++y;
 
-
+            
             
 
         }
@@ -136,7 +134,15 @@ void clrscr()
 
 
 
-bool check_if_hit_boarder(int x, int y) {
-
-
+bool check_if_hit_boarder(int x, int y, Board &board) {
+    
+    // Check if hit the boarder or # sign
+    if (x == 0 || x == 79 || y == 0 || y == 24)
+        return true;
+    
+    // Check if hit a # sign
+    if (board[x][y] == '#')
+        return true;
+    
+    return false;
 }
