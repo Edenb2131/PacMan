@@ -8,6 +8,12 @@ using namespace std;
 
 
 Pacman::Pacman() {
-	//    cout << "Made a PAC-MAN!" << endl;
-	//    cout << "@" << endl;
+
+    lives = 3;
+    move_speed = 2;
+    x_pos = 39;
+    y_pos = 16;
+    direction = 's';
+
+
 }

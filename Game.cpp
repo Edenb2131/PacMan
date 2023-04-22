@@ -13,8 +13,8 @@ using namespace std;
 #include "Ghost.h"
 #include "Pacman.h"
 
-void gotoxy(int x, int y);               // prototype
-void clrscr();                           // prototype
+void gotoxy(int x, int y);                             // prototype
+void clrscr();                                         // prototype
 bool check_if_hit_boarder(int x, int y ,Board &board); // prototype
 
 void Game::print_menu() {
@@ -27,8 +27,8 @@ void Game::print_menu() {
 
 Game::Game() {
     print_menu();
-   // int choice = get_players_choice();
-    int choice = 1;
+    int choice = get_players_choice();
+   
     while (true) {
         // Start a new game
         if (choice == 1)
@@ -61,39 +61,75 @@ int Game::get_players_choice() {
 
 void Game::start() {
     // Start the game
-    system("cls");
 
-    Board board;
     Pacman pacman;
+    Board board = Board(pacman.get_lives(), 0);
 
-    board.print();
-    //flushall();
-
-    int x = pacman.get_x_pos();
-    int y = pacman.get_y_pos();
-
+    // Main game loop
     while (pacman.get_lives() > 0) {
+        int x = pacman.get_x_pos();
+        int y = pacman.get_y_pos();
+        char d = pacman.get_direction();
 
-        while (!kbhit()) {
+        system("cls");
+        board.print(pacman.get_lives(), 0);
 
-            char d = pacman.get_direction();
+
+        while (!check_if_hit_boarder(x, y, board)) {
+
+            if (_kbhit())
+                d = _getch();
             
+            switch (d) {
+                case 'd':
+                    ++x;
+                    break;
+                case 'w':
+                    --y;
+                    break;
+                case 'a':
+                    --x;
+                    break;
+                case 'x':
+                    ++y;
+                    break;
+                case 's':
+                    break;
 
+                default:
+                    gotoxy(WIDTH / 2 - 18, HEIGHT - 1);
+                    cout << " ERORR! - hit a wrong charcter"; ///////// NNED to change //////
+                    d = 's';
+                    break;
+
+            }
+                
             gotoxy(x, y);
+            char c = board.get_board()[y][x];
             cout << "@" << endl;
-            Sleep(100);
+
+            Sleep(200);
 
             gotoxy(x, y);
-            cout << " " << endl;
-
-            ++x;
-            ++y;
-
-            
+            cout << c << endl;
             
 
         }
+
+        int lives = pacman.get_lives();
+        pacman.set_lives(--lives);
+
+        gotoxy(WIDTH /2 - 10 , HEIGHT - 1);
+        cout << "You Lost this life " << endl;
+        Sleep(2000);
     }
+
+    // Game has ended - 3 lives were done
+    system("cls");
+    cout << "                                 YOU LOST THE GAME !" << endl;
+
+    Sleep(2000);
+    system("cls");
 
 }
 
@@ -131,9 +167,7 @@ void clrscr()
     system("cls");
 }
 
-
-
-
+// function that checks if we hit a wall
 bool check_if_hit_boarder(int x, int y, Board &board) {
     
     // Check if hit the boarder or # sign
@@ -141,7 +175,7 @@ bool check_if_hit_boarder(int x, int y, Board &board) {
         return true;
     
     // Check if hit a # sign
-    if (board[x][y] == '#')
+    if (board.get_board()[y][x] == '#')
         return true;
     
     return false;

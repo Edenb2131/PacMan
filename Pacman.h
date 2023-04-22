@@ -8,20 +8,21 @@
 #include <iostream>
 
 class Pacman {
-
-    int lives = 3;
-    int move_speed = 2;
-    int x_pos = 40;
-    int y_pos = 12;
-    char direction = 's';
+    char pacman_char = '@';
+    int lives;
+    int move_speed;
+    int x_pos;
+    int y_pos;
+    char direction;
 
 public:
 
     Pacman();
-    int get_lives() const { return lives; }
+    char get_pacman_char() const { return pacman_char; }
+    int get_lives() { return lives; }
     int get_move_speed() const { return move_speed; }
-    int get_x_pos() const { return x_pos; }
-    int get_y_pos() const { return y_pos; }
+    int get_x_pos() { return x_pos; }
+    int get_y_pos() { return y_pos; }
     char get_direction() const { return direction; }
 
 
