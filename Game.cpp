@@ -70,9 +70,6 @@ void Game::start() {
         cin.clear(); // This is to flush the buffer
         char d = pacman.get_direction();
 
-        change_max_score_if_needed(score);
-        score = 0; // Staring a new life \ game with score = 0
-
         clrscreen();
         board.print(pacman.get_lives(), score);
 
@@ -87,6 +84,9 @@ void Game::start() {
         cout << "You Lost a life " << endl;
 
         Sleep(2000);
+
+        change_max_score_if_needed(score);
+        score = 0; // Staring a new life \ game with score = 0
     }
 
     // PLayer has lost the game - showing massge and max score
@@ -121,23 +121,19 @@ void Game::play(int x, int y, char d, Board& board) {
             break;
 
         default:
-            Game::gotoxy(WIDTH / 2 - 18, HEIGHT - 1);
-            cout << " ERORR! - hit a wrong charcter"; ///////// NNED to change //////
             d = 's';
             break;
-
         }
 
-
+        // handeling moving between right - left walls
         if (x == 0 && y == 11 && d == 'a')
             x = 79;
-
 
         if (x == 79 && y == 11 && d == 'd')
             x = 0;
 
         // Just to check the X and Y of the player
-        Game::gotoxy(2, 26);
+        Game::gotoxy(1, 26);
         cout << x << "  " << y;
 
         Game::gotoxy(x, y);
@@ -217,8 +213,8 @@ void Game::change_max_score_if_needed(int _max_score) {
 
     if (_max_score > max_score) {
         max_score = _max_score;
-        gotoxy(77, 24);
-        cout << "   ";
+        gotoxy(76, 24);
+        cout << "    ";
     }
 }
 
