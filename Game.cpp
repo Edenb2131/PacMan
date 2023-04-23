@@ -9,8 +9,6 @@
 using namespace std;
 
 void clrscreen();                                      // prototype
-void gotoxy(int x, int y);                             // prototype
-void clrscr();                                         // prototype
 bool check_if_hit_boarder(int x, int y ,Board &board); // prototype
 
 void Game::print_menu() {
@@ -57,97 +55,113 @@ int Game::get_players_choice() {
 
 void Game::start() {
     // Start the game
-
     Pacman pacman;
     Board board = Board(pacman.get_lives(), score);
 
+
     // Main game loop
     while (pacman.get_lives() > 0) {
+
+        // Get starting proporties for Pac-Man
         int x = pacman.get_x_pos();
         int y = pacman.get_y_pos();
+        int lives = pacman.get_lives();
 
         cin.clear(); // This is to flush the buffer
         char d = pacman.get_direction();
 
+        change_max_score_if_needed(score);
+        score = 0; // Staring a new life \ game with score = 0
+
         clrscreen();
         board.print(pacman.get_lives(), score);
 
-        while (!check_if_hit_boarder(x, y, board)) {
-
-            if (_kbhit())
-                d = _getch();
-            
-            switch (d) {
-                case 'd':
-                    ++x;
-                    break;
-                case 'w':
-                    --y;
-                    break;
-                case 'a':
-                    --x;
-                    break;
-                case 'x':
-                    ++y;
-                    break;
-                case 's':
-                    break;
-
-                default:
-                    gotoxy(WIDTH / 2 - 18, HEIGHT - 1);
-                    cout << " ERORR! - hit a wrong charcter"; ///////// NNED to change //////
-                    d = 's';
-                    break;
-
-            }
-                
-
-            if (x == 0 && y == 11 && d == 'a')
-                x = 79;
-
-
-            if (x == 79 && y == 11 && d == 'd')
-                x = 0;
-
-            // Just to check the X and Y of the player
-            gotoxy(2, 26);
-            cout << x << "  " << y;
-
-            gotoxy(x, y);
-            char c = board.get_board()[y][x];
-            cout << "@" << endl;
-
-            Sleep(200);
-
-            // If eat breadcrumbs then chnage the score and the board
-            if (c == '.') {
-                c = ' ';
-                score++;
-            }
-            gotoxy(x, y);
-            cout << c << endl;
-            
-            // Update score
-            gotoxy(76, 24);
-            cout << score;
-        }
-
-        int lives = pacman.get_lives();
+        // play 1 life
+        play(x, y, d, board);
+        
+        // Set life for Pac-Man
         pacman.set_lives(--lives);
 
+        // Annpuncing that life has been taking
         gotoxy(WIDTH /2 - 10 , HEIGHT - 1);
-        cout << "You Lost this life " << endl;
+        cout << "You Lost a life " << endl;
+
         Sleep(2000);
     }
 
-    // Game has ended - 3 lives were done
-    clrscreen();
-    cout << "                                 YOU LOST THE GAME !" << endl;
+    // PLayer has lost the game - showing massge and max score
+    player_lost_msg();
 
     Sleep(2000);
     clrscreen();
 
 }
+
+void Game::play(int x, int y, char d, Board& board) {
+
+    while (!check_if_hit_boarder(x, y, board)) {
+
+        if (_kbhit())
+            d = _getch();
+
+        switch (d) {
+        case 'd':
+            ++x;
+            break;
+        case 'w':
+            --y;
+            break;
+        case 'a':
+            --x;
+            break;
+        case 'x':
+            ++y;
+            break;
+        case 's':
+            break;
+
+        default:
+            Game::gotoxy(WIDTH / 2 - 18, HEIGHT - 1);
+            cout << " ERORR! - hit a wrong charcter"; ///////// NNED to change //////
+            d = 's';
+            break;
+
+        }
+
+
+        if (x == 0 && y == 11 && d == 'a')
+            x = 79;
+
+
+        if (x == 79 && y == 11 && d == 'd')
+            x = 0;
+
+        // Just to check the X and Y of the player
+        Game::gotoxy(2, 26);
+        cout << x << "  " << y;
+
+        Game::gotoxy(x, y);
+        char c = board.get_board()[y][x];
+        cout << "@" << endl;
+
+        Sleep(200);
+
+        // If eat breadcrumbs then chnage the score
+        if (c == '.') {
+            c = ' ';
+            score++;
+        }
+        Game::gotoxy(x, y);
+        cout << c << endl;
+
+
+        // Update the score on board
+        board.update_score_board(score);
+
+    }
+
+}
+
 
 void Game::print_InstAndKeys() {
     // Print the instructions and keys
@@ -166,7 +180,7 @@ void Game::print_InstAndKeys() {
 
 
 // function definition -- requires windows.h
-static void gotoxy(int x, int y)
+void Game::gotoxy(int x, int y)
 {
     HANDLE hConsoleOutput;
     COORD dwCursorPosition;
@@ -196,4 +210,24 @@ bool check_if_hit_boarder(int x, int y, Board &board) {
         return true;
     
     return false;
+}
+
+
+void Game::change_max_score_if_needed(int _max_score) {
+
+    if (_max_score > max_score) {
+        max_score = _max_score;
+        gotoxy(77, 24);
+        cout << "   ";
+    }
+}
+
+
+void Game::player_lost_msg() {
+
+    // Game has ended - 3 lives were done
+    clrscreen();
+    cout << " YOU LOST THE GAME !" << endl;
+    cout << " Your max score is: " << max_score;
+
 }

@@ -22,7 +22,6 @@ using std::vector;
 
 class Board {
     vector<vector<char>> board;
-    //    char board[HEIGHT][WIDTH]{};
     void print_last_row(int _lives, int _score);
 public:
 
