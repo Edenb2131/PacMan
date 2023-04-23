@@ -2,17 +2,13 @@
 // Created by Eden Bar on 21/04/2023.
 //
 
+#include "Game.h"
 #include <Windows.h>
 #include <conio.h>
 #include <iostream>
 using namespace std;
 
-
-#include "Game.h"
-#include "Board.h"
-#include "Ghost.h"
-#include "Pacman.h"
-
+void clrscreen();                                      // prototype
 void gotoxy(int x, int y);                             // prototype
 void clrscr();                                         // prototype
 bool check_if_hit_boarder(int x, int y ,Board &board); // prototype
@@ -28,7 +24,7 @@ void Game::print_menu() {
 Game::Game() {
     print_menu();
     int choice = get_players_choice();
-   
+    score = 0;
     while (true) {
         // Start a new game
         if (choice == 1)
@@ -63,17 +59,18 @@ void Game::start() {
     // Start the game
 
     Pacman pacman;
-    Board board = Board(pacman.get_lives(), 0);
+    Board board = Board(pacman.get_lives(), score);
 
     // Main game loop
     while (pacman.get_lives() > 0) {
         int x = pacman.get_x_pos();
         int y = pacman.get_y_pos();
+
+        cin.clear(); // This is to flush the buffer
         char d = pacman.get_direction();
 
-        system("cls");
-        board.print(pacman.get_lives(), 0);
-
+        clrscreen();
+        board.print(pacman.get_lives(), score);
 
         while (!check_if_hit_boarder(x, y, board)) {
 
@@ -104,16 +101,35 @@ void Game::start() {
 
             }
                 
+
+            if (x == 0 && y == 11 && d == 'a')
+                x = 79;
+
+
+            if (x == 79 && y == 11 && d == 'd')
+                x = 0;
+
+            // Just to check the X and Y of the player
+            gotoxy(2, 26);
+            cout << x << "  " << y;
+
             gotoxy(x, y);
             char c = board.get_board()[y][x];
             cout << "@" << endl;
 
             Sleep(200);
 
+            // If eat breadcrumbs then chnage the score and the board
+            if (c == '.') {
+                c = ' ';
+                score++;
+            }
             gotoxy(x, y);
             cout << c << endl;
             
-
+            // Update score
+            gotoxy(76, 24);
+            cout << score;
         }
 
         int lives = pacman.get_lives();
@@ -125,11 +141,11 @@ void Game::start() {
     }
 
     // Game has ended - 3 lives were done
-    system("cls");
+    clrscreen();
     cout << "                                 YOU LOST THE GAME !" << endl;
 
     Sleep(2000);
-    system("cls");
+    clrscreen();
 
 }
 
@@ -150,7 +166,7 @@ void Game::print_InstAndKeys() {
 
 
 // function definition -- requires windows.h
-void gotoxy(int x, int y)
+static void gotoxy(int x, int y)
 {
     HANDLE hConsoleOutput;
     COORD dwCursorPosition;
@@ -162,7 +178,7 @@ void gotoxy(int x, int y)
 }
 
 // function definition -- requires process.h
-void clrscr()
+void clrscreen()
 {
     system("cls");
 }
@@ -171,8 +187,9 @@ void clrscr()
 bool check_if_hit_boarder(int x, int y, Board &board) {
     
     // Check if hit the boarder or # sign
-    if (x == 0 || x == 79 || y == 0 || y == 24)
-        return true;
+    if (x != 0 && y != 11 || x !=79 && y !=11) // To make sure this wont inturpt swtiching sides
+        if (x == 0 || x == 79 || y == 0 || y == 24)
+            return true;
     
     // Check if hit a # sign
     if (board.get_board()[y][x] == '#')

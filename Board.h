@@ -10,7 +10,7 @@
 #include <string>
 #include <array>
 
-//#include "Game.h"
+#include "Game.h"
 //#include "Ghost.h"
 //#include "breadcrumbs.h"
 //#include "Pacman.h"
@@ -29,6 +29,7 @@ public:
     Board(int _lives, int _score);
     vector<vector<char>> get_board() { return board; }
     void print(int _lives, int _score);
+    void update_score_board(int _score);
 };
 
 

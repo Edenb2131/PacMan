@@ -7,6 +7,11 @@
 
 #include <iostream>
 
+#include "Game.h"
+#include "Board.h"
+#include "Ghost.h"
+#include "Pacman.h"
+
 class Game {
 
     int score = 0;
@@ -21,6 +26,5 @@ public:
     static void print_InstAndKeys();
 
 };
-
 
 #endif //PACMAN_GAME_GAME_H
