@@ -48,7 +48,6 @@ Board::Board(int _lives, int _score) {
         }
     }
 
-
     print_last_row(_lives, _score);
 }
 
@@ -97,4 +96,8 @@ void Board::print_last_row(int _lives, int _score) {
      // board[HEIGHT - 1][79] = '0' + _score;
      Game::gotoxy(76, 24);
      cout << _score;
+ }
+
+ void Board::setCell(int x, int y, char ch) {
+     board[x][y] = ch;
  }

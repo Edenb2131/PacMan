@@ -15,8 +15,8 @@ void Game::print_menu() {
     // Present the menu
     cout << "Welcome to Pacman!" << endl;
     cout << "1. Start a new Game" << endl;
-    cout << "2. Present instructions and keys" << endl;
-    cout << "3. Quit" << endl;
+    cout << "8. Present instructions and keys" << endl;
+    cout << "9. Quit" << endl;
 }
 
 Game::Game() {
@@ -27,9 +27,9 @@ Game::Game() {
         // Start a new game
         if (choice == 1)
             start();
-        if (choice == 2)
+        if (choice == 8)
             print_InstAndKeys();
-        if (choice == 3) {
+        if (choice == 9) {
             cout << "Thanks for playing PAC-MAN!" << endl;
             exit(0);
         }
@@ -44,7 +44,7 @@ int Game::get_players_choice() {
     int choice;
     cin >> choice;
 
-    if (choice < 1 || choice > 3) {
+    if (choice != 1 && choice != 8 && choice != 9) {
         cout << "Invalid choice. Please try again." << endl;
         cin >> choice;
     }
@@ -56,6 +56,8 @@ int Game::get_players_choice() {
 void Game::start() {
     // Start the game
     Pacman pacman;
+    Ghost ghost_1(1, 11);
+    Ghost ghost_2(1, 68);
     Board board = Board(pacman.get_lives(), score);
 
 
@@ -63,9 +65,26 @@ void Game::start() {
     while (pacman.get_lives() > 0) {
 
         // Get starting proporties for Pac-Man
-        int x = pacman.get_x_pos();
-        int y = pacman.get_y_pos();
+        int pacman_x = pacman.get_x_pos();
+        int pacman_y = pacman.get_y_pos();
         int lives = pacman.get_lives();
+
+        // Get starting proporties for ghost 1
+        int ghost_1_x = ghost_1.get_x_pos();
+        int ghost_1_y = ghost_1.get_y_pos();
+        char prev_char_1 = board.get_board()[ghost_1_x][ghost_1_y];
+        board.setCell(ghost_1_x, ghost_1_y, '$');
+        ghost_1.updateXY();
+        //board.setCell(ghost_1_x, ghost_1_y, prev_char_1);
+
+
+        // Get starting proporties for ghost 2
+        int ghost_2_x = ghost_2.get_x_pos();
+        int ghost_2_y = ghost_2.get_y_pos();
+        char prev_char_2 = board.get_board()[ghost_2_x][ghost_2_y];
+        ghost_2.updateXY();
+        //board.setCell(ghost_2_x, ghost_2_y, prev_char_2);
+
 
         cin.clear(); // This is to flush the buffer
         char d = pacman.get_direction();
@@ -74,7 +93,7 @@ void Game::start() {
         board.print(pacman.get_lives(), score);
 
         // play 1 life
-        play(x, y, d, board);
+        play(pacman_x, pacman_y, d, board, ghost_1, ghost_2);
         
         // Set life for Pac-Man
         pacman.set_lives(--lives);
@@ -97,7 +116,7 @@ void Game::start() {
 
 }
 
-void Game::play(int x, int y, char d, Board& board) {
+void Game::play(int x, int y, char d, Board& board, Ghost ghost_1, Ghost ghost_2) {
 
     while (!check_if_hit_boarder(x, y, board)) {
 
@@ -147,9 +166,15 @@ void Game::play(int x, int y, char d, Board& board) {
             c = ' ';
             score++;
         }
+ 
         Game::gotoxy(x, y);
         cout << c << endl;
 
+        // Handle ghosts
+        //Game::gotoxy(ghost_1.get_x_pos(), ghost_1.get_y_pos());
+        
+       // Game::gotoxy(ghost_2.get_x_pos(), ghost_2.get_y_pos());
+      //  cout << "$" << endl;
 
         // Update the score on board
         board.update_score_board(score);
@@ -201,8 +226,12 @@ bool check_if_hit_boarder(int x, int y, Board &board) {
         if (x == 0 || x == 79 || y == 0 || y == 24)
             return true;
     
-    // Check if hit a # sign
+    // Check if hit a # sign (wall)
     if (board.get_board()[y][x] == '#')
+        return true;
+
+    // Check if hit a $ sign (ghost)
+    if (board.get_board()[y][x] == '$')
         return true;
     
     return false;
