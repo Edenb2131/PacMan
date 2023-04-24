@@ -8,12 +8,9 @@ using namespace std;
 
 
 Pacman::Pacman() {
-
     lives = 3;
     move_speed = 2;
     x_pos = 39;
     y_pos = 16;
     direction = 's';
-
-
 }

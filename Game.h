@@ -16,7 +16,7 @@ class Game {
 
     int score = 0;
     int max_score = 0;
-    void play(int x, int y, char d, Board& board);
+    void play(int x, int y, char d, Board& board, Ghost ghost_1, Ghost ghost_2);
 public:
 
     Game();

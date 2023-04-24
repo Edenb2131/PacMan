@@ -29,6 +29,7 @@ public:
     vector<vector<char>> get_board() { return board; }
     void print(int _lives, int _score);
     void update_score_board(int _score);
+    void setCell(int x, int y, char ch);
 };
 
 
