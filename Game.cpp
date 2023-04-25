@@ -1,15 +1,12 @@
-//
-// Created by Eden Bar on 21/04/2023.
-//
-
 #include "Game.h"
+#include "Ghost.h"
 #include <Windows.h>
 #include <conio.h>
 #include <iostream>
 using namespace std;
 
-void clrscreen();                                      // prototype
-bool check_if_hit_boarder(int x, int y ,Board &board); // prototype
+void clrscreen();                                       // prototype
+bool check_if_hit_obstacle(int x, int y ,Board &board); // prototype
 
 void Game::print_menu() {
     // Present the menu
@@ -20,16 +17,18 @@ void Game::print_menu() {
 }
 
 Game::Game() {
+    ghosts[0] = new Ghost(GHOST_1_X_POS, GHOST_1_Y_POS);
+    ghosts[1] = new Ghost(GHOST_2_X_POS, GHOST_2_Y_POS);
     print_menu();
     int choice = get_players_choice();
     score = 0;
     while (true) {
         // Start a new game
-        if (choice == 1)
+        if (choice == START)
             start();
-        if (choice == 8)
+        if (choice == INSTRUCTIONS)
             print_InstAndKeys();
-        if (choice == 9) {
+        if (choice == EXIT) {
             cout << "Thanks for playing PAC-MAN!" << endl;
             exit(0);
         }
@@ -40,26 +39,26 @@ Game::Game() {
     }
 }
 
+Game::~Game() {
+    for (int i = 0; i < NUMBER_OF_GHOSTS; i++)
+        delete(ghosts[i]);
+}
+
 int Game::get_players_choice() {
     int choice;
     cin >> choice;
 
-    if (choice != 1 && choice != 8 && choice != 9) {
+    if (choice != START && choice != INSTRUCTIONS && choice != EXIT) {
         cout << "Invalid choice. Please try again." << endl;
         cin >> choice;
     }
-
     return choice;
 }
 
 
 void Game::start() {
     // Start the game
-    Pacman pacman;
-    Ghost ghost_1(1, 11);
-    Ghost ghost_2(1, 68);
-    Board board = Board(pacman.get_lives(), score);
-
+    Board board(pacman.get_lives(), score);
 
     // Main game loop
     while (pacman.get_lives() > 0) {
@@ -68,24 +67,7 @@ void Game::start() {
         int pacman_x = pacman.get_x_pos();
         int pacman_y = pacman.get_y_pos();
         int lives = pacman.get_lives();
-
-        // Get starting proporties for ghost 1
-        int ghost_1_x = ghost_1.get_x_pos();
-        int ghost_1_y = ghost_1.get_y_pos();
-        char prev_char_1 = board.get_board()[ghost_1_x][ghost_1_y];
-        board.setCell(ghost_1_x, ghost_1_y, '$');
-        ghost_1.updateXY();
-        //board.setCell(ghost_1_x, ghost_1_y, prev_char_1);
-
-
-        // Get starting proporties for ghost 2
-        int ghost_2_x = ghost_2.get_x_pos();
-        int ghost_2_y = ghost_2.get_y_pos();
-        char prev_char_2 = board.get_board()[ghost_2_x][ghost_2_y];
-        ghost_2.updateXY();
-        //board.setCell(ghost_2_x, ghost_2_y, prev_char_2);
-
-
+        
         cin.clear(); // This is to flush the buffer
         char d = pacman.get_direction();
 
@@ -93,12 +75,12 @@ void Game::start() {
         board.print(pacman.get_lives(), score);
 
         // play 1 life
-        play(pacman_x, pacman_y, d, board, ghost_1, ghost_2);
+        play(pacman_x, pacman_y, d, board);
         
         // Set life for Pac-Man
         pacman.set_lives(--lives);
 
-        // Annpuncing that life has been taking
+        // Annpuncing that life has been taken
         gotoxy(WIDTH /2 - 10 , HEIGHT - 1);
         cout << "You Lost a life " << endl;
 
@@ -113,74 +95,89 @@ void Game::start() {
 
     Sleep(2000);
     clrscreen();
-
 }
 
-void Game::play(int x, int y, char d, Board& board, Ghost ghost_1, Ghost ghost_2) {
+// TODO: change packman position to struct
+void Game::play(int x, int y, char direction, Board& board) {
 
-    while (!check_if_hit_boarder(x, y, board)) {
+    while (!check_if_hit_obstacle(x, y, board)) {
+
+        // Handle ghosts
+        ghosts[0]->move(board);
+        ghosts[1]->move(board);
 
         if (_kbhit())
-            d = _getch();
+            direction = _getch();
 
-        switch (d) {
-        case 'd':
+        switch (direction) {
+        case RIGHT_LOWER_CASE: 
             ++x;
             break;
-        case 'w':
+        case RIGHT_UPPER_CASE:
+            ++x;
+            break;
+
+        case UP_LOWER_CASE:
             --y;
             break;
-        case 'a':
+        case UP_UPPER_CASE:
+            --y;
+            break;
+
+        case LEFT_LOWER_CASE:
             --x;
             break;
-        case 'x':
+
+        case LEFT_UPPER_CASE:
+            --x;
+            break;
+
+        case DOWN_LOWER_CASE:
             ++y;
             break;
-        case 's':
+
+        case DOWN_UPPER_CASE:
+            ++y;
+            break;
+
+        case STAY_LOWER_CASE:
+            break;
+
+        case STAY_UPPER_CASE:
             break;
 
         default:
-            d = 's';
+            direction = STAY_LOWER_CASE;
             break;
         }
 
         // handeling moving between right - left walls
-        if (x == 0 && y == 11 && d == 'a')
-            x = 79;
+        // TODO: move to consts
+        if (x == 0 && y == 11 && direction == LEFT_LOWER_CASE)
+            x = WIDTH-1;
 
-        if (x == 79 && y == 11 && d == 'd')
+        if (x == WIDTH-1 && y == 11 && direction == RIGHT_LOWER_CASE)
             x = 0;
 
-        // Just to check the X and Y of the player
-        Game::gotoxy(1, 26);
-        cout << x << "  " << y;
-
         Game::gotoxy(x, y);
-        char c = board.get_board()[y][x];
-        cout << "@" << endl;
+        char boardCell = board.getCell(x,y);
+        cout << pacman.get_pacman_char() << endl;
 
         Sleep(200);
 
         // If eat breadcrumbs then chnage the score
-        if (c == '.') {
-            c = ' ';
+        if (boardCell == BREADCRUMB) {
+            board.setCell(x, y, EMPTY);
+            boardCell = EMPTY;
             score++;
         }
  
         Game::gotoxy(x, y);
-        cout << c << endl;
-
-        // Handle ghosts
-        //Game::gotoxy(ghost_1.get_x_pos(), ghost_1.get_y_pos());
-        
-       // Game::gotoxy(ghost_2.get_x_pos(), ghost_2.get_y_pos());
-      //  cout << "$" << endl;
+        cout << boardCell << endl;
 
         // Update the score on board
         board.update_score_board(score);
-
     }
-
 }
 
 
@@ -190,14 +187,12 @@ void Game::print_InstAndKeys() {
     cout << "   Eat all the dots to win the game." << endl;
     cout << "   Use the keys to move." << endl;
     cout << "Keys:" << endl;
-    cout << "   W arrow - move up" << endl;
-    cout << "   X arrow - move down" << endl;
-    cout << "   A arrow - move left" << endl;
-    cout << "   D arrow - move right" << endl;
-    cout << "   S arrow - stay" << endl;
+    cout << "   w or W arrow - move up" << endl;
+    cout << "   x or X arrow - move down" << endl;
+    cout << "   a or A arrow - move left" << endl;
+    cout << "   d or D arrow - move right" << endl;
+    cout << "   s or S arrow - stay" << endl;
 }
-
-
 
 
 // function definition -- requires windows.h
@@ -219,7 +214,7 @@ void clrscreen()
 }
 
 // function that checks if we hit a wall
-bool check_if_hit_boarder(int x, int y, Board &board) {
+bool check_if_hit_obstacle(int x, int y, Board &board) {
     
     // Check if hit the boarder or # sign
     if (x != 0 && y != 11 || x !=79 && y !=11) // To make sure this wont inturpt swtiching sides
@@ -227,11 +222,11 @@ bool check_if_hit_boarder(int x, int y, Board &board) {
             return true;
     
     // Check if hit a # sign (wall)
-    if (board.get_board()[y][x] == '#')
+    if (board.getCell(x,y) == '#')
         return true;
 
     // Check if hit a $ sign (ghost)
-    if (board.get_board()[y][x] == '$')
+    if (board.getCell(x,y) == '$')
         return true;
     
     return false;

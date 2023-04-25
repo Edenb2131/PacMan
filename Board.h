@@ -1,6 +1,3 @@
-//
-// Created by Eden Bar on 21/04/2023.
-//
 #ifndef PACMAN_GAME_BOARD_H
 #define PACMAN_GAME_BOARD_H
 
@@ -9,11 +6,7 @@
 #include <vector>
 #include <string>
 #include <array>
-
 #include "Game.h"
-//#include "Ghost.h"
-//#include "breadcrumbs.h"
-//#include "Pacman.h"
 
 #define WIDTH 80
 #define HEIGHT 25
@@ -30,6 +23,7 @@ public:
     void print(int _lives, int _score);
     void update_score_board(int _score);
     void setCell(int x, int y, char ch);
+    char getCell(int x, int y) const;
 };
 
 

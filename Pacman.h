@@ -1,14 +1,11 @@
-//
-// Created by Eden Bar on 21/04/2023.
-//
-
 #ifndef PACMAN_GAME_PACMAN_H
 #define PACMAN_GAME_PACMAN_H
 
 #include <iostream>
 
+#define PACMAN_CHAR '@'
+
 class Pacman {
-    char pacman_char = '@';
     int lives;
     int move_speed;
     int x_pos;
@@ -18,7 +15,7 @@ class Pacman {
 public:
 
     Pacman();
-    char get_pacman_char() const { return pacman_char; }
+    char get_pacman_char() const { return PACMAN_CHAR; }
     int get_lives() { return lives; }
     int get_move_speed() const { return move_speed; }
     int get_x_pos() { return x_pos; }
