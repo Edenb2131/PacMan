@@ -22,6 +22,7 @@ class Pacman;
 #define RIGHT_UPPER_CASE 'D'
 #define STAY_LOWER_CASE 's'
 #define STAY_UPPER_CASE 'S'
+#define SCREEN_FREEZE (char)27
 #define BREADCRUMB '.'
 #define EMPTY ' '
 #define NUMBER_OF_GHOSTS 2
@@ -53,6 +54,7 @@ public:
     static void gotoxy(int x, int y);
     bool isGamePinished(bool& didPlayerWin);
     void initLivesAndScore();
+    void UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
 };            
 
 #endif //PACMAN_GAME_GAME_H

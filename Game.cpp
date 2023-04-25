@@ -108,60 +108,85 @@ void Game::start() {
     clrscreen();
 }
 
+void UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen) {
+    
+    if (is_screen_frozen && direction != SCREEN_FREEZE) {
+        return;
+    }
+    switch (direction) { 
+    case SCREEN_FREEZE:
+        is_screen_frozen = !is_screen_frozen;
+        direction = prev_direction;
+        break;
+    case RIGHT_LOWER_CASE: 
+        ++x;
+        break;
+    case RIGHT_UPPER_CASE:
+        ++x;
+        break;
+
+    case UP_LOWER_CASE:
+        --y;
+        break;
+    case UP_UPPER_CASE:
+        --y;
+        break;
+
+    case LEFT_LOWER_CASE:
+        --x;
+        break;
+
+    case LEFT_UPPER_CASE:
+        --x;
+        break;
+
+    case DOWN_LOWER_CASE:
+        ++y;
+        break;
+
+    case DOWN_UPPER_CASE:
+        ++y;
+        break;
+
+    case STAY_LOWER_CASE:
+        break;
+
+    case STAY_UPPER_CASE:
+        break;
+
+    default:
+        direction = STAY_LOWER_CASE;
+        break;
+    }
+}
+
 GameStatus Game::play(int x, int y, char direction, Board& board) {
 
+    bool is_screen_frozen = false;
+    
     while (!check_if_hit_obstacle(x, y, board) && total_score < NUMBER_OF_BREADCRUMBS) {
 
-        // Handle ghosts
-        for (auto& ghost : ghosts) {
-            ghost->move(board);
-        }
-
+        int prev_x = x, prev_y = y;
+        char prev_direction = direction;
+        
         if (_kbhit())
             direction = _getch();
-
-        switch (direction) {
-        case RIGHT_LOWER_CASE: 
-            ++x;
-            break;
-        case RIGHT_UPPER_CASE:
-            ++x;
-            break;
-
-        case UP_LOWER_CASE:
-            --y;
-            break;
-        case UP_UPPER_CASE:
-            --y;
-            break;
-
-        case LEFT_LOWER_CASE:
-            --x;
-            break;
-
-        case LEFT_UPPER_CASE:
-            --x;
-            break;
-
-        case DOWN_LOWER_CASE:
-            ++y;
-            break;
-
-        case DOWN_UPPER_CASE:
-            ++y;
-            break;
-
-        case STAY_LOWER_CASE:
-            break;
-
-        case STAY_UPPER_CASE:
-            break;
-
-        default:
-            direction = STAY_LOWER_CASE;
-            break;
+        UpdatePositionAccordingToUser(x, y, prev_direction, direction, is_screen_frozen);
+        if (is_screen_frozen) {
+            Sleep(200);
+            continue;
         }
 
+        // If eat breadcrumbs then chnage the score
+        char boardCell = board.getCell(prev_x, prev_y);
+        if (boardCell == BREADCRUMB) {
+            board.setCell(prev_x, prev_y, EMPTY);
+            boardCell = EMPTY;
+            total_score++;
+        }
+        Game::gotoxy(prev_x, prev_y);
+        cout << boardCell << endl;      
+        
         // handeling moving between right - left walls
         if (x == 0 && y == 11 && direction == LEFT_LOWER_CASE)
             x = WIDTH-1;
@@ -170,24 +195,17 @@ GameStatus Game::play(int x, int y, char direction, Board& board) {
             x = 0;
 
         Game::gotoxy(x, y);
-        char boardCell = board.getCell(x,y);
         cout << pacman.get_pacman_char() << endl;
 
-        Sleep(200);
-
-        // If eat breadcrumbs then chnage the score
-        if (boardCell == BREADCRUMB) {
-            board.setCell(x, y, EMPTY);
-            boardCell = EMPTY;
-            total_score++;
+        // Handle ghosts
+        for (auto& ghost : ghosts) {
+            ghost->move(board);
         }
- 
-        Game::gotoxy(x, y);
-        cout << boardCell << endl;
 
         // Update the score on board
         board.update_score_board(total_score);
-        // board.print_last_row(pacman.get_lives(), total_score);
+
+        Sleep(200);
     }
 
     if (total_score >= NUMBER_OF_BREADCRUMBS) {
