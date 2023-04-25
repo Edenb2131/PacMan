@@ -108,7 +108,7 @@ void Game::start() {
     clrscreen();
 }
 
-void UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen) {
+void Game::UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen) {
     
     if (is_screen_frozen && direction != SCREEN_FREEZE) {
         return;
