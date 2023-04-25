@@ -21,7 +21,7 @@ Game::Game() {
     ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
     print_menu();
     int choice = get_players_choice();
-    currentRoundScore = 0;
+    total_score = 0;
     while (true) {
         // Start a new game
         if (choice == START)
@@ -62,7 +62,7 @@ bool Game::isGamePinished(bool& didPlayerWin) {
 
 void Game::start() {
     // Start the game
-    Board board(pacman.get_lives(), currentRoundScore);
+    Board board(pacman.get_lives(), total_score);
     bool didPlayerWin = false;
 
     // Main game loop
@@ -76,7 +76,7 @@ void Game::start() {
         char d = pacman.get_direction();
 
         clrscreen();
-        board.print(pacman.get_lives(), currentRoundScore);
+        board.print(pacman.get_lives(), total_score);
 
         // play 1 life
         GameStatus status = play(pacman_x, pacman_y, d, board);
@@ -96,8 +96,6 @@ void Game::start() {
 
             Sleep(2000);
 
-            change_max_score_if_needed(currentRoundScore);
-            currentRoundScore = 0; // Staring a new life / game with score = 0, total score stays th same.
         }
         else if (status == GameStatus::PlayerWon) {
             didPlayerWin = true;
@@ -106,7 +104,7 @@ void Game::start() {
 
     // showing end message and initial score and pacmen's lives
     player_end_message(didPlayerWin);
-    initialLivesAndScore();
+    initLivesAndScore();
     clrscreen();
 }
 
@@ -181,7 +179,6 @@ GameStatus Game::play(int x, int y, char direction, Board& board) {
         if (boardCell == BREADCRUMB) {
             board.setCell(x, y, EMPTY);
             boardCell = EMPTY;
-            currentRoundScore++;
             total_score++;
         }
  
@@ -190,6 +187,7 @@ GameStatus Game::play(int x, int y, char direction, Board& board) {
 
         // Update the score on board
         board.update_score_board(total_score);
+        // board.print_last_row(pacman.get_lives(), total_score);
     }
 
     if (total_score >= NUMBER_OF_BREADCRUMBS) {
@@ -251,16 +249,6 @@ bool check_if_hit_obstacle(int x, int y, Board &board) {
 }
 
 
-void Game::change_max_score_if_needed(int _max_score) {
-
-    if (_max_score > max_score) {
-        max_score = _max_score;
-        gotoxy(76, 24);
-        cout << "    ";
-    }
-}
-
-
 void Game::player_end_message(bool& didPlayerWin) {
     clrscreen();
     if (!didPlayerWin) {
@@ -277,9 +265,7 @@ void Game::player_end_message(bool& didPlayerWin) {
     cin >> ch;
 }
 
-void Game::initialLivesAndScore() {
+void Game::initLivesAndScore() {
     pacman.set_lives(MAX_NUMBER_OF_LIVES);
     total_score = 0;
-    max_score = 0;
-    currentRoundScore = 0;
 }
