@@ -4,6 +4,7 @@
 #include <iostream>
 
 #define PACMAN_CHAR '@'
+#define MAX_NUMBER_OF_LIVES 3
 
 class Pacman {
     int lives;

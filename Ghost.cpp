@@ -7,10 +7,12 @@ using namespace std;
 
 Ghost::Ghost(int x, int y) {
     move_speed = 1;
+    initial_x_pos = x;
+    initial_y_pos = y;
     x_pos = x;
     y_pos = y;
-    direction = 'x';
-    hoverAbove = '.';
+    direction = DOWN_LOWER_CASE;
+    hoverAbove = BREADCRUMB;
     shouldUpdate = true;
 }
 
@@ -50,9 +52,9 @@ void Ghost::updateXY() {
     }
 }
 
-void Ghost::moveToStartingPosition(int new_x, int new_y, Board& board) {
+void Ghost::moveToStartingPosition(Board& board) {
     board.setCell(x_pos, y_pos, hoverAbove);
-    x_pos = new_x;
-    y_pos = new_y;
-    board.setCell(new_x, new_y, GHOST_CHAR);
+    x_pos = initial_x_pos;
+    y_pos = initial_y_pos;
+    board.setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);
 }

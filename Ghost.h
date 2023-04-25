@@ -8,6 +8,8 @@ class Board;
 
 class Ghost {
     int move_speed;
+    int initial_x_pos;
+    int initial_y_pos;
     int x_pos;
     int y_pos;
     char direction;
@@ -29,7 +31,7 @@ public:
     void set_y_pos(int _y_pos) { this->y_pos = _y_pos; }
     void move(Board& board);
     void updateXY();
-    void moveToStartingPosition(int new_x, int new_y, Board& board);
+    void moveToStartingPosition(Board& board);
 };
 
 

@@ -31,14 +31,18 @@ class Pacman;
 #define GHOST_2_Y_STARTING_POS 1
 #define NUMBER_OF_BREADCRUMBS 150 // TODO: count and change the actual number!!!
 
+enum class GameStatus {
+    PlayerWon,
+    PlayerLost
+};
 
 class Game {
-    int score = 0;
+    int currentRoundScore = 0;
     int max_score = 0;
     int total_score = 0;
     Pacman pacman;
     std::array<Ghost*, NUMBER_OF_GHOSTS> ghosts;
-    void play(int x, int y, char d, Board& board);
+    GameStatus play(int x, int y, char d, Board& board);
 public:
 
     Game();
@@ -46,12 +50,12 @@ public:
     void print_menu();
     void start();
     void change_max_score_if_needed(int _max_score);
-    void player_lost_msg();
+    void player_end_message(bool& didPlayerWin);
     static int get_players_choice();
     static void print_InstAndKeys();
     static void gotoxy(int x, int y);
-};
-
-                        
+    bool isGamePinished(bool& didPlayerWin);
+    void initialLivesAndScore();
+};            
 
 #endif //PACMAN_GAME_GAME_H

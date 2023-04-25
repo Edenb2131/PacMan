@@ -21,7 +21,7 @@ Game::Game() {
     ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
     print_menu();
     int choice = get_players_choice();
-    score = 0;
+    currentRoundScore = 0;
     while (true) {
         // Start a new game
         if (choice == START)
@@ -55,19 +55,18 @@ int Game::get_players_choice() {
     return choice;
 }
 
+bool Game::isGamePinished(bool& didPlayerWin) {
+    return pacman.get_lives() <= 0 || didPlayerWin;
+ }
+
 
 void Game::start() {
     // Start the game
-    Board board(pacman.get_lives(), score);
+    Board board(pacman.get_lives(), currentRoundScore);
+    bool didPlayerWin = false;
 
     // Main game loop
-    // TODO: move to function. while(!isGameFinished())
-    while (pacman.get_lives() > 0 && total_score <= NUMBER_OF_BREADCRUMBS) {
-
-        if (total_score == NUMBER_OF_BREADCRUMBS) {
-            // TODO: go back to main menu!
-        }
-
+    while (!isGamePinished(didPlayerWin)) {
         // Get starting proporties for Pac-Man
         int pacman_x = pacman.get_x_pos();
         int pacman_y = pacman.get_y_pos();
@@ -77,45 +76,48 @@ void Game::start() {
         char d = pacman.get_direction();
 
         clrscreen();
-        board.print(pacman.get_lives(), score);
+        board.print(pacman.get_lives(), currentRoundScore);
 
         // play 1 life
-        play(pacman_x, pacman_y, d, board);
+        GameStatus status = play(pacman_x, pacman_y, d, board);
         
-        // Set life for Pac-Man
-        pacman.set_lives(--lives);
+        if (status == GameStatus::PlayerLost) {
+            // Set life for Pac-Man
+            pacman.set_lives(--lives);
 
-        // reposition both ghosts to their strting position
-        // TODO: add to ghost initial x,y.
-        // TODO: change to for (auto& ghost : ghosts)
-        ghosts[0]->moveToStartingPosition(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS, board);
-        ghosts[1]->moveToStartingPosition(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS, board);
+            // move both ghosts to their strting position
+            for (auto& ghost : ghosts) {
+                ghost->moveToStartingPosition(board);
+            }
 
-        // Annpuncing that life has been taken
-        gotoxy(WIDTH /2 - 10 , HEIGHT - 1);
-        cout << "You Lost a life " << endl;
+            // Annpuncing that life has been taken
+            gotoxy(WIDTH / 2 - 10, HEIGHT - 1);
+            cout << "You Lost a life " << endl;
 
-        Sleep(2000);
+            Sleep(2000);
 
-        change_max_score_if_needed(score);
-        total_score += score;
-        score = 0; // Staring a new life \ game with score = 0
+            change_max_score_if_needed(currentRoundScore);
+            currentRoundScore = 0; // Staring a new life / game with score = 0, total score stays th same.
+        }
+        else if (status == GameStatus::PlayerWon) {
+            didPlayerWin = true;
+        }
     }
 
-    // PLayer has lost the game - showing message and max score
-    player_lost_msg();
-
+    // showing end message and initial score and pacmen's lives
+    player_end_message(didPlayerWin);
+    initialLivesAndScore();
     clrscreen();
 }
 
-// TODO: change packman position to struct
-void Game::play(int x, int y, char direction, Board& board) {
+GameStatus Game::play(int x, int y, char direction, Board& board) {
 
-    while (!check_if_hit_obstacle(x, y, board)) {
+    while (!check_if_hit_obstacle(x, y, board) && total_score < NUMBER_OF_BREADCRUMBS) {
 
         // Handle ghosts
-        ghosts[0]->move(board);
-        ghosts[1]->move(board);
+        for (auto& ghost : ghosts) {
+            ghost->move(board);
+        }
 
         if (_kbhit())
             direction = _getch();
@@ -179,15 +181,21 @@ void Game::play(int x, int y, char direction, Board& board) {
         if (boardCell == BREADCRUMB) {
             board.setCell(x, y, EMPTY);
             boardCell = EMPTY;
-            score++;
+            currentRoundScore++;
+            total_score++;
         }
  
         Game::gotoxy(x, y);
         cout << boardCell << endl;
 
         // Update the score on board
-        board.update_score_board(score);
+        board.update_score_board(total_score);
     }
+
+    if (total_score >= NUMBER_OF_BREADCRUMBS) {
+        return GameStatus::PlayerWon;
+    }
+    return GameStatus::PlayerLost;
 }
 
 
@@ -253,13 +261,25 @@ void Game::change_max_score_if_needed(int _max_score) {
 }
 
 
-void Game::player_lost_msg() {
-
-    // Game has ended - 3 lives were done
+void Game::player_end_message(bool& didPlayerWin) {
     clrscreen();
+    if (!didPlayerWin) {
+        // Game has ended - 3 lives were over
+        cout << "YOU LOST THE GAME!" << endl;
+    }
+    else {
+        // Game has ended - player won
+        cout << "YOU WON THE GAME!" << endl;
+    }
     char ch;
-    cout << " YOU LOST THE GAME !" << endl;
-    cout << " Your max score is: " << max_score << endl;;
+    cout << "Your score is: " << total_score << endl;;
     cout << "Press any key to go back to main menu!" << endl;
     cin >> ch;
+}
+
+void Game::initialLivesAndScore() {
+    pacman.set_lives(MAX_NUMBER_OF_LIVES);
+    total_score = 0;
+    max_score = 0;
+    currentRoundScore = 0;
 }

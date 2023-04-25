@@ -37,7 +37,6 @@ Board::Board(int _lives, int _score) {
             "################################################################################",
     };
 
-
     for (int i = 0; i < HEIGHT - 1; i++) {
         for (int j = 0; j < WIDTH; j++) {
             board[i][j] = map_sketch[i][j];

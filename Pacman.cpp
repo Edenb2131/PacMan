@@ -4,7 +4,7 @@ using namespace std;
 
 
 Pacman::Pacman() {
-    lives = 3;
+    lives = MAX_NUMBER_OF_LIVES;
     move_speed = 2;
     x_pos = 39;
     y_pos = 16;
