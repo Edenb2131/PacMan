@@ -22,34 +22,39 @@ class Pacman;
 #define RIGHT_UPPER_CASE 'D'
 #define STAY_LOWER_CASE 's'
 #define STAY_UPPER_CASE 'S'
+#define SCREEN_FREEZE (char)27
 #define BREADCRUMB '.'
 #define EMPTY ' '
 #define NUMBER_OF_GHOSTS 2
-#define GHOST_1_X_POS 11
-#define GHOST_1_Y_POS 1
-#define GHOST_2_X_POS 68
-#define GHOST_2_Y_POS 1
+#define GHOST_1_X_STARTING_POS 11
+#define GHOST_1_Y_STARTING_POS 1
+#define GHOST_2_X_STARTING_POS 68
+#define GHOST_2_Y_STARTING_POS 1
+#define NUMBER_OF_BREADCRUMBS 150 // TODO: count and change the actual number!!!
 
+enum class GameStatus {
+    PlayerWon,
+    PlayerLost
+};
 
 class Game {
-    int score = 0;
-    int max_score = 0;
+    int total_score = 0;
     Pacman pacman;
-    Ghost* ghosts[NUMBER_OF_GHOSTS];
-    void play(int x, int y, char d, Board& board);
-public:
+    std::array<Ghost*, NUMBER_OF_GHOSTS> ghosts;
+    GameStatus play(int x, int y, char d, Board& board);
 
+public:
     Game();
     ~Game();
     void print_menu();
     void start();
-    void change_max_score_if_needed(int _max_score);
-    void player_lost_msg();
+    void player_end_message(bool& didPlayerWin);
     static int get_players_choice();
     static void print_InstAndKeys();
     static void gotoxy(int x, int y);
-};
-
-                        
+    bool isGamePinished(bool& didPlayerWin);
+    void initLivesAndScore();
+    void UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
+};            
 
 #endif //PACMAN_GAME_GAME_H

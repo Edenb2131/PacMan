@@ -37,7 +37,6 @@ Board::Board(int _lives, int _score) {
             "################################################################################",
     };
 
-
     for (int i = 0; i < HEIGHT - 1; i++) {
         for (int j = 0; j < WIDTH; j++) {
             board[i][j] = map_sketch[i][j];
@@ -62,20 +61,21 @@ void Board::print_last_row(int _lives, int _score) {
     // add "Number of lives: " and "Score: " to the last row using strings
     string lives = "Number of lives: " + to_string(_lives);
     string score = "Score: " + to_string(_score);
-
+    const int scoreSizePixels = 10;
+    
     // add lives to the board
     for (int i = 0; i < lives.length(); i++) {
         board[HEIGHT - 1][i] = lives[i];
     }
 
     // add "Score: " to the last row
-    int score_start =int(WIDTH - score.length());
-    for (int i = score_start; i < WIDTH; i++) {
+    int score_start =int(WIDTH - scoreSizePixels);
+    for (int i = score_start; i < score_start + score.length(); i++) {
         board[HEIGHT - 1][i - 3] = score[i - score_start];
     }
 
     // Making white space in last row
-    for (int i = 0; i < WIDTH - score.length() - lives.length() - 3; i++) {
+    for (int i = 0; i < WIDTH - scoreSizePixels - lives.length() - 3; i++) {
         board[HEIGHT - 1][lives.length() + i] = ' ';
     }
 
@@ -88,7 +88,7 @@ void Board::print_last_row(int _lives, int _score) {
 
  void Board::update_score_board(int _score) {
      // board[HEIGHT - 1][79] = '0' + _score;
-     Game::gotoxy(76, 24);
+     Game::gotoxy(74, 24);
      cout << _score;
  }
 

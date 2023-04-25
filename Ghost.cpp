@@ -7,10 +7,12 @@ using namespace std;
 
 Ghost::Ghost(int x, int y) {
     move_speed = 1;
+    initial_x_pos = x;
+    initial_y_pos = y;
     x_pos = x;
     y_pos = y;
-    direction = 'x';
-    hoverAbove = '.';
+    direction = DOWN_LOWER_CASE;
+    hoverAbove = BREADCRUMB;
     shouldUpdate = true;
 }
 
@@ -33,19 +35,26 @@ void Ghost::move(Board& board) {
 }
 
 void Ghost::updateXY() {
-    if (direction == 'x' && y_pos < HEIGHT-3 && y_pos >= 1) {
+    if (direction == DOWN_LOWER_CASE && y_pos < HEIGHT-3 && y_pos >= 1) {
         y_pos++;
     }
-    else if (direction == 'x' && y_pos == HEIGHT - 3) {
-        direction = 'w';
+    else if (direction == DOWN_LOWER_CASE && y_pos == HEIGHT - 3) {
+        direction = UP_LOWER_CASE;
         y_pos--;
     }
-    else if (direction == 'w' && y_pos == 1) {
-        direction = 'x';
+    else if (direction == UP_LOWER_CASE && y_pos == 1) {
+        direction = DOWN_LOWER_CASE;
         y_pos++;
     }
-    else if (direction == 'w' && y_pos < HEIGHT - 3 && y_pos >= 1) {
-        direction = 'w';
+    else if (direction == UP_LOWER_CASE && y_pos < HEIGHT - 3 && y_pos >= 1) {
+        direction = UP_LOWER_CASE;
         y_pos--;
     }
+}
+
+void Ghost::moveToStartingPosition(Board& board) {
+    board.setCell(x_pos, y_pos, hoverAbove);
+    x_pos = initial_x_pos;
+    y_pos = initial_y_pos;
+    board.setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);
 }

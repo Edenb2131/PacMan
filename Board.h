@@ -15,7 +15,6 @@ using std::vector;
 
 class Board {
     vector<vector<char>> board;
-    void print_last_row(int _lives, int _score);
 public:
 
     Board(int _lives, int _score);
@@ -24,6 +23,7 @@ public:
     void update_score_board(int _score);
     void setCell(int x, int y, char ch);
     char getCell(int x, int y) const;
+    void print_last_row(int _lives, int _score);
 };
 
 
