@@ -25,17 +25,19 @@ class Pacman;
 #define BREADCRUMB '.'
 #define EMPTY ' '
 #define NUMBER_OF_GHOSTS 2
-#define GHOST_1_X_POS 11
-#define GHOST_1_Y_POS 1
-#define GHOST_2_X_POS 68
-#define GHOST_2_Y_POS 1
+#define GHOST_1_X_STARTING_POS 11
+#define GHOST_1_Y_STARTING_POS 1
+#define GHOST_2_X_STARTING_POS 68
+#define GHOST_2_Y_STARTING_POS 1
+#define NUMBER_OF_BREADCRUMBS 150 // TODO: count and change the actual number!!!
 
 
 class Game {
     int score = 0;
     int max_score = 0;
+    int total_score = 0;
     Pacman pacman;
-    Ghost* ghosts[NUMBER_OF_GHOSTS];
+    std::array<Ghost*, NUMBER_OF_GHOSTS> ghosts;
     void play(int x, int y, char d, Board& board);
 public:
 

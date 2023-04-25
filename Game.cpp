@@ -17,8 +17,8 @@ void Game::print_menu() {
 }
 
 Game::Game() {
-    ghosts[0] = new Ghost(GHOST_1_X_POS, GHOST_1_Y_POS);
-    ghosts[1] = new Ghost(GHOST_2_X_POS, GHOST_2_Y_POS);
+    ghosts[0] = new Ghost(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS);
+    ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
     print_menu();
     int choice = get_players_choice();
     score = 0;
@@ -61,7 +61,12 @@ void Game::start() {
     Board board(pacman.get_lives(), score);
 
     // Main game loop
-    while (pacman.get_lives() > 0) {
+    // TODO: move to function. while(!isGameFinished())
+    while (pacman.get_lives() > 0 && total_score <= NUMBER_OF_BREADCRUMBS) {
+
+        if (total_score == NUMBER_OF_BREADCRUMBS) {
+            // TODO: go back to main menu!
+        }
 
         // Get starting proporties for Pac-Man
         int pacman_x = pacman.get_x_pos();
@@ -80,6 +85,12 @@ void Game::start() {
         // Set life for Pac-Man
         pacman.set_lives(--lives);
 
+        // reposition both ghosts to their strting position
+        // TODO: add to ghost initial x,y.
+        // TODO: change to for (auto& ghost : ghosts)
+        ghosts[0]->moveToStartingPosition(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS, board);
+        ghosts[1]->moveToStartingPosition(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS, board);
+
         // Annpuncing that life has been taken
         gotoxy(WIDTH /2 - 10 , HEIGHT - 1);
         cout << "You Lost a life " << endl;
@@ -87,13 +98,13 @@ void Game::start() {
         Sleep(2000);
 
         change_max_score_if_needed(score);
+        total_score += score;
         score = 0; // Staring a new life \ game with score = 0
     }
 
-    // PLayer has lost the game - showing massge and max score
+    // PLayer has lost the game - showing message and max score
     player_lost_msg();
 
-    Sleep(2000);
     clrscreen();
 }
 
@@ -152,7 +163,6 @@ void Game::play(int x, int y, char direction, Board& board) {
         }
 
         // handeling moving between right - left walls
-        // TODO: move to consts
         if (x == 0 && y == 11 && direction == LEFT_LOWER_CASE)
             x = WIDTH-1;
 
@@ -247,7 +257,9 @@ void Game::player_lost_msg() {
 
     // Game has ended - 3 lives were done
     clrscreen();
+    char ch;
     cout << " YOU LOST THE GAME !" << endl;
-    cout << " Your max score is: " << max_score;
-
+    cout << " Your max score is: " << max_score << endl;;
+    cout << "Press any key to go back to main menu!" << endl;
+    cin >> ch;
 }

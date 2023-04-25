@@ -33,19 +33,26 @@ void Ghost::move(Board& board) {
 }
 
 void Ghost::updateXY() {
-    if (direction == 'x' && y_pos < HEIGHT-3 && y_pos >= 1) {
+    if (direction == DOWN_LOWER_CASE && y_pos < HEIGHT-3 && y_pos >= 1) {
         y_pos++;
     }
-    else if (direction == 'x' && y_pos == HEIGHT - 3) {
-        direction = 'w';
+    else if (direction == DOWN_LOWER_CASE && y_pos == HEIGHT - 3) {
+        direction = UP_LOWER_CASE;
         y_pos--;
     }
-    else if (direction == 'w' && y_pos == 1) {
-        direction = 'x';
+    else if (direction == UP_LOWER_CASE && y_pos == 1) {
+        direction = DOWN_LOWER_CASE;
         y_pos++;
     }
-    else if (direction == 'w' && y_pos < HEIGHT - 3 && y_pos >= 1) {
-        direction = 'w';
+    else if (direction == UP_LOWER_CASE && y_pos < HEIGHT - 3 && y_pos >= 1) {
+        direction = UP_LOWER_CASE;
         y_pos--;
     }
+}
+
+void Ghost::moveToStartingPosition(int new_x, int new_y, Board& board) {
+    board.setCell(x_pos, y_pos, hoverAbove);
+    x_pos = new_x;
+    y_pos = new_y;
+    board.setCell(new_x, new_y, GHOST_CHAR);
 }

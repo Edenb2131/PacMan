@@ -29,6 +29,7 @@ public:
     void set_y_pos(int _y_pos) { this->y_pos = _y_pos; }
     void move(Board& board);
     void updateXY();
+    void moveToStartingPosition(int new_x, int new_y, Board& board);
 };
 
 
