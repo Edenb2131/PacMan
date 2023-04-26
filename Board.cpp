@@ -43,6 +43,7 @@ Board::Board(int _lives, int _score) {
         }
     }
     print_last_row(_lives, _score);
+    totalNumberOfBreadcrumbs = countTotalNumberOfBreadcrumbs();
 }
 
 void Board::print(int _lives, int _score) {
@@ -98,4 +99,16 @@ void Board::print_last_row(int _lives, int _score) {
 
  char Board::getCell(int x, int y) const {
      return board[y][x];
+ }
+
+ int Board::countTotalNumberOfBreadcrumbs() const {
+     int counter = 0;
+     for (int i = 0; i < HEIGHT - 1; i++) {
+         for (int j = 0; j < WIDTH; j++) {
+             if (board[i][j] == BREADCRUMB) {
+                 counter++;
+             }
+         }
+     }
+     return counter;
  }

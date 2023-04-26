@@ -16,18 +16,18 @@ Ghost::Ghost(int x, int y) {
     shouldUpdate = true;
 }
 
-void Ghost::move(Board& board) {
+void Ghost::move(Board* board) {
     if (shouldUpdate) {
         int prev_x = x_pos;
         int prev_y = y_pos;
-        board.setCell(prev_x, prev_y, hoverAbove);
+        board->setCell(prev_x, prev_y, hoverAbove);
         Game::gotoxy(prev_x, prev_y);
         cout << hoverAbove << endl;
 
         updateXY();
 
-        hoverAbove = board.getCell(x_pos, y_pos);
-        board.setCell(x_pos, y_pos, get_ghost_char());
+        hoverAbove = board->getCell(x_pos, y_pos);
+        board->setCell(x_pos, y_pos, get_ghost_char());
         Game::gotoxy(x_pos, y_pos);
         cout << get_ghost_char() << endl;
     }
@@ -52,9 +52,9 @@ void Ghost::updateXY() {
     }
 }
 
-void Ghost::moveToStartingPosition(Board& board) {
-    board.setCell(x_pos, y_pos, hoverAbove);
+void Ghost::moveToStartingPosition(Board* board) {
+    board->setCell(x_pos, y_pos, hoverAbove);
     x_pos = initial_x_pos;
     y_pos = initial_y_pos;
-    board.setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);
+    board->setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);
 }
