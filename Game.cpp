@@ -7,54 +7,19 @@ using namespace std;
 
 void clrscreen();                                       // prototype
 
-void Game::print_menu() {
-    // Present the menu
-    cout << "Welcome to Pacman!" << endl;
-    cout << "1. Start a new Game" << endl;
-    cout << "8. Present instructions and keys" << endl;
-    cout << "9. Quit" << endl;
-}
-
 Game::Game() {
     ghosts[0] = new Ghost(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS);
     ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
-    board = nullptr;
-    print_menu();
-    int choice = get_players_choice();
+    board = new Board(pacman.get_lives(), total_score);
     total_score = 0;
-    while (true) {
-        // Start a new game
-        if (choice == START)
-            start();
-        if (choice == INSTRUCTIONS)
-            print_InstAndKeys();
-        if (choice == EXIT) {
-            cout << "Thanks for playing PAC-MAN!" << endl;
-            exit(0);
-        }
-        cout << endl;
-
-        print_menu();
-        choice = get_players_choice();
-    }
 }
 
 Game::~Game() {
     for (int i = 0; i < NUMBER_OF_GHOSTS; i++)
         delete(ghosts[i]);
-    //delete(board);
+    delete(board);
 }
 
-int Game::get_players_choice() {
-    int choice;
-    cin >> choice;
-
-    if (choice != START && choice != INSTRUCTIONS && choice != EXIT) {
-        cout << "Invalid choice. Please try again." << endl;
-        cin >> choice;
-    }
-    return choice;
-}
 
 bool Game::isGamePinished(bool& didPlayerWin) {
     return pacman.get_lives() <= 0 || didPlayerWin;
@@ -63,7 +28,6 @@ bool Game::isGamePinished(bool& didPlayerWin) {
 
 void Game::start() {
     // Start the game
-    board = new Board(pacman.get_lives(), total_score);
     bool didPlayerWin = false;
 
     // Main game loop
@@ -106,7 +70,6 @@ void Game::start() {
     // showing end message and initial score and pacmen's lives
     player_end_message(didPlayerWin);
     initLivesAndScore();
-    delete(board);
     clrscreen();
 }
 
@@ -214,20 +177,6 @@ GameStatus Game::play(int x, int y, char direction) {
         return GameStatus::PlayerWon;
     }
     return GameStatus::PlayerLost;
-}
-
-
-void Game::print_InstAndKeys() {
-    // Print the instructions and keys
-    cout << "Instructions:" << endl;
-    cout << "   Eat all the dots to win the game." << endl;
-    cout << "   Use the keys to move." << endl;
-    cout << "Keys:" << endl;
-    cout << "   w or W arrow - move up" << endl;
-    cout << "   x or X arrow - move down" << endl;
-    cout << "   a or A arrow - move left" << endl;
-    cout << "   d or D arrow - move right" << endl;
-    cout << "   s or S arrow - stay" << endl;
 }
 
 

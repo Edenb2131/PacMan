@@ -46,11 +46,8 @@ class Game {
 public:
     Game();
     ~Game();
-    void print_menu();
     void start();
     void player_end_message(bool& didPlayerWin);
-    static int get_players_choice();
-    static void print_InstAndKeys();
     static void gotoxy(int x, int y);
     bool isGamePinished(bool& didPlayerWin);
     void initLivesAndScore();
