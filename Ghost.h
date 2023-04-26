@@ -2,7 +2,6 @@
 #define PACMAN_GAME_GHOST_H
 
 class Board;
-#include "Game.h"
 
 #define GHOST_CHAR '$'
 

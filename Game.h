@@ -3,11 +3,11 @@
 
 #include <iostream>
 
-class Ghost;
 class Board;
 class Pacman;
 #include "Board.h"
 #include "Pacman.h"
+#include "GhostManager.h"
 
 #define START 1
 #define INSTRUCTIONS 8
@@ -25,11 +25,6 @@ class Pacman;
 #define SCREEN_FREEZE (char)27
 #define BREADCRUMB '.'
 #define EMPTY ' '
-#define NUMBER_OF_GHOSTS 2
-#define GHOST_1_X_STARTING_POS 11
-#define GHOST_1_Y_STARTING_POS 1
-#define GHOST_2_X_STARTING_POS 68
-#define GHOST_2_Y_STARTING_POS 1
 
 enum class GameStatus {
     PlayerWon,
@@ -40,8 +35,8 @@ class Game {
     int total_score = 0;
     Board* board;
     Pacman pacman;
-    std::array<Ghost*, NUMBER_OF_GHOSTS> ghosts;
-    GameStatus play(int x, int y, char d);
+    GhostManager ghostManager;
+    GameStatus playOneRound(int x, int y, char d);
 
 public:
     Game();
@@ -49,7 +44,7 @@ public:
     void start();
     void player_end_message(bool& didPlayerWin);
     static void gotoxy(int x, int y);
-    bool isGamePinished(bool& didPlayerWin);
+    bool isGameFinished(bool& didPlayerWin);
     void updatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
     bool check_if_hit_obstacle(int x, int y);
 };            

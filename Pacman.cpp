@@ -5,8 +5,7 @@ using namespace std;
 
 Pacman::Pacman() {
     lives = MAX_NUMBER_OF_LIVES;
-    move_speed = 2;
-    x_pos = 39;
-    y_pos = 16;
+    x_pos = PACMAN_X_STARTING_POS;
+    y_pos = PACMAN_Y_STARTING_POS;
     direction = 's';
 }
