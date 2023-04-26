@@ -15,6 +15,7 @@ using std::vector;
 
 class Board {
     vector<vector<char>> board;
+    int totalNumberOfBreadcrumbs;
 public:
 
     Board(int _lives, int _score);
@@ -24,6 +25,8 @@ public:
     void setCell(int x, int y, char ch);
     char getCell(int x, int y) const;
     void print_last_row(int _lives, int _score);
+    int gettotalNumberOfBreadcrumbs() const { return totalNumberOfBreadcrumbs; }
+    int countTotalNumberOfBreadcrumbs() const;
 };
 
 

@@ -6,7 +6,6 @@
 using namespace std;
 
 void clrscreen();                                       // prototype
-bool check_if_hit_obstacle(int x, int y ,Board &board); // prototype
 
 void Game::print_menu() {
     // Present the menu
@@ -19,6 +18,7 @@ void Game::print_menu() {
 Game::Game() {
     ghosts[0] = new Ghost(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS);
     ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
+    board = nullptr;
     print_menu();
     int choice = get_players_choice();
     total_score = 0;
@@ -42,6 +42,7 @@ Game::Game() {
 Game::~Game() {
     for (int i = 0; i < NUMBER_OF_GHOSTS; i++)
         delete(ghosts[i]);
+    //delete(board);
 }
 
 int Game::get_players_choice() {
@@ -62,7 +63,7 @@ bool Game::isGamePinished(bool& didPlayerWin) {
 
 void Game::start() {
     // Start the game
-    Board board(pacman.get_lives(), total_score);
+    board = new Board(pacman.get_lives(), total_score);
     bool didPlayerWin = false;
 
     // Main game loop
@@ -76,10 +77,10 @@ void Game::start() {
         char d = pacman.get_direction();
 
         clrscreen();
-        board.print(pacman.get_lives(), total_score);
+        board->print(pacman.get_lives(), total_score);
 
         // play 1 life
-        GameStatus status = play(pacman_x, pacman_y, d, board);
+        GameStatus status = play(pacman_x, pacman_y, d);
         
         if (status == GameStatus::PlayerLost) {
             // Set life for Pac-Man
@@ -105,6 +106,7 @@ void Game::start() {
     // showing end message and initial score and pacmen's lives
     player_end_message(didPlayerWin);
     initLivesAndScore();
+    delete(board);
     clrscreen();
 }
 
@@ -160,11 +162,11 @@ void Game::UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, ch
     }
 }
 
-GameStatus Game::play(int x, int y, char direction, Board& board) {
+GameStatus Game::play(int x, int y, char direction) {
 
     bool is_screen_frozen = false;
     
-    while (!check_if_hit_obstacle(x, y, board) && total_score < NUMBER_OF_BREADCRUMBS) {
+    while (!check_if_hit_obstacle(x, y) && total_score < board->gettotalNumberOfBreadcrumbs()) {
 
         int prev_x = x, prev_y = y;
         char prev_direction = direction;
@@ -178,9 +180,9 @@ GameStatus Game::play(int x, int y, char direction, Board& board) {
         }
 
         // If eat breadcrumbs then chnage the score
-        char boardCell = board.getCell(prev_x, prev_y);
+        char boardCell = board->getCell(prev_x, prev_y);
         if (boardCell == BREADCRUMB) {
-            board.setCell(prev_x, prev_y, EMPTY);
+            board->setCell(prev_x, prev_y, EMPTY);
             boardCell = EMPTY;
             total_score++;
         }
@@ -203,12 +205,12 @@ GameStatus Game::play(int x, int y, char direction, Board& board) {
         }
 
         // Update the score on board
-        board.update_score_board(total_score);
+        board->update_score_board(total_score);
 
         Sleep(200);
     }
 
-    if (total_score >= NUMBER_OF_BREADCRUMBS) {
+    if (total_score >= board->gettotalNumberOfBreadcrumbs()) {
         return GameStatus::PlayerWon;
     }
     return GameStatus::PlayerLost;
@@ -248,7 +250,7 @@ void clrscreen()
 }
 
 // function that checks if we hit a wall
-bool check_if_hit_obstacle(int x, int y, Board &board) {
+bool Game::check_if_hit_obstacle(int x, int y) {
     
     // Check if hit the boarder or # sign
     if (x != 0 && y != 11 || x !=79 && y !=11) // To make sure this wont inturpt swtiching sides
@@ -256,11 +258,11 @@ bool check_if_hit_obstacle(int x, int y, Board &board) {
             return true;
     
     // Check if hit a # sign (wall)
-    if (board.getCell(x,y) == '#')
+    if (board->getCell(x,y) == '#')
         return true;
 
     // Check if hit a $ sign (ghost)
-    if (board.getCell(x,y) == '$')
+    if (board->getCell(x,y) == '$')
         return true;
     
     return false;

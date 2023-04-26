@@ -30,7 +30,6 @@ class Pacman;
 #define GHOST_1_Y_STARTING_POS 1
 #define GHOST_2_X_STARTING_POS 68
 #define GHOST_2_Y_STARTING_POS 1
-#define NUMBER_OF_BREADCRUMBS 150 // TODO: count and change the actual number!!!
 
 enum class GameStatus {
     PlayerWon,
@@ -39,9 +38,10 @@ enum class GameStatus {
 
 class Game {
     int total_score = 0;
+    Board* board;
     Pacman pacman;
     std::array<Ghost*, NUMBER_OF_GHOSTS> ghosts;
-    GameStatus play(int x, int y, char d, Board& board);
+    GameStatus play(int x, int y, char d);
 
 public:
     Game();
@@ -55,6 +55,7 @@ public:
     bool isGamePinished(bool& didPlayerWin);
     void initLivesAndScore();
     void UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
+    bool check_if_hit_obstacle(int x, int y);
 };            
 
 #endif //PACMAN_GAME_GAME_H
