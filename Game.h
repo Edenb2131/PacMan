@@ -50,8 +50,7 @@ public:
     void player_end_message(bool& didPlayerWin);
     static void gotoxy(int x, int y);
     bool isGamePinished(bool& didPlayerWin);
-    void initLivesAndScore();
-    void UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
+    void updatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
     bool check_if_hit_obstacle(int x, int y);
 };            
 

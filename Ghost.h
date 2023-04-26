@@ -25,10 +25,10 @@ public:
     int get_y_pos() { return y_pos; }
     char get_direction() const { return direction; }
 
-
     void set_move_speed(int _move_speed) { this->move_speed = _move_speed; }
     void set_x_pos(int _x_pos) { this->x_pos = _x_pos; }
     void set_y_pos(int _y_pos) { this->y_pos = _y_pos; }
+
     void move(Board* board);
     void updateXY();
     void moveToStartingPosition(Board* board);
