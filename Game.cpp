@@ -8,20 +8,16 @@ using namespace std;
 void clrscreen();  // prototype
 
 Game::Game() {
-    ghosts[0] = new Ghost(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS);
-    ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
     board = new Board(pacman.get_lives(), total_score);
     total_score = 0;
 }
 
 Game::~Game() {
-    for (int i = 0; i < NUMBER_OF_GHOSTS; i++)
-        delete(ghosts[i]);
     delete(board);
 }
 
 
-bool Game::isGamePinished(bool& didPlayerWin) {
+bool Game::isGameFinished(bool& didPlayerWin) {
     return pacman.get_lives() <= 0 || didPlayerWin;
  }
 
@@ -31,36 +27,33 @@ void Game::start() {
     bool didPlayerWin = false;
 
     // Main game loop
-    while (!isGamePinished(didPlayerWin)) {
+    while (!isGameFinished(didPlayerWin)) {
         // Get starting proporties for Pac-Man
         int pacman_x = pacman.get_x_pos();
         int pacman_y = pacman.get_y_pos();
         int lives = pacman.get_lives();
         
         cin.clear(); // This is to flush the buffer
-        char d = pacman.get_direction();
+        char direction = pacman.get_direction();
 
         clrscreen();
         board->print(pacman.get_lives(), total_score);
 
         // play 1 life
-        GameStatus status = play(pacman_x, pacman_y, d);
+        GameStatus status = playOneRound(pacman_x, pacman_y, direction);
         
         if (status == GameStatus::PlayerLost) {
             // Set life for Pac-Man
             pacman.set_lives(--lives);
 
-            // move both ghosts to their strting position
-            for (auto& ghost : ghosts) {
-                ghost->moveToStartingPosition(board);
-            }
-
-            // Annpuncing that life has been taken
+            // move all ghosts to their strting position
+            ghostManager.moveGhostsToStartingPosition(board);
+            
+            // Announcing that life has been taken
             gotoxy(WIDTH / 2 - 10, HEIGHT - 1);
             cout << "You Lost a life " << endl;
 
             Sleep(2000);
-
         }
         else if (status == GameStatus::PlayerWon) {
             didPlayerWin = true;
@@ -124,7 +117,7 @@ void Game::updatePositionAccordingToUser(int& x, int& y, char prev_direction, ch
     }
 }
 
-GameStatus Game::play(int x, int y, char direction) {
+GameStatus Game::playOneRound(int x, int y, char direction) {
 
     bool is_screen_frozen = false;
     
@@ -162,8 +155,9 @@ GameStatus Game::play(int x, int y, char direction) {
         cout << pacman.get_pacman_char() << endl;
 
         // Handle ghosts
-        for (auto& ghost : ghosts) {
-            ghost->move(board);
+        bool didCollide = ghostManager.moveAndCheckCollision(prev_x, prev_y, x, y, board);
+        if (didCollide) {
+            return GameStatus::PlayerLost;
         }
 
         // Update the score on board
@@ -207,10 +201,6 @@ bool Game::check_if_hit_obstacle(int x, int y) {
     
     // Check if hit a # sign (wall)
     if (board->getCell(x,y) == '#')
-        return true;
-
-    // Check if hit a $ sign (ghost)
-    if (board->getCell(x,y) == '$')
         return true;
     
     return false;

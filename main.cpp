@@ -11,25 +11,22 @@ static void print_InstAndKeys();
 
 int main() {
 
-    print_menu();
-    int choice = get_players_choice();
     while (true) {
+        print_menu();
+        int choice = get_players_choice();
         if (choice == START) {
             Game game;
             game.start();
         }  
-        if (choice == INSTRUCTIONS)
+        if (choice == INSTRUCTIONS) {
             print_InstAndKeys();
+        }
         if (choice == EXIT) {
             cout << "Thanks for playing PAC-MAN!" << endl;
             exit(0);
         }
         cout << endl;
-
-        print_menu();
-        choice = get_players_choice();
     }
-
 
     return 0;
 }
