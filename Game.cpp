@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-void clrscreen();                                       // prototype
+void clrscreen();  // prototype
 
 Game::Game() {
     ghosts[0] = new Ghost(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS);
@@ -69,11 +69,10 @@ void Game::start() {
 
     // showing end message and initial score and pacmen's lives
     player_end_message(didPlayerWin);
-    initLivesAndScore();
     clrscreen();
 }
 
-void Game::UpdatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen) {
+void Game::updatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen) {
     
     if (is_screen_frozen && direction != SCREEN_FREEZE) {
         return;
@@ -136,7 +135,7 @@ GameStatus Game::play(int x, int y, char direction) {
         
         if (_kbhit())
             direction = _getch();
-        UpdatePositionAccordingToUser(x, y, prev_direction, direction, is_screen_frozen);
+        updatePositionAccordingToUser(x, y, prev_direction, direction, is_screen_frozen);
         if (is_screen_frozen) {
             Sleep(200);
             continue;
@@ -232,9 +231,4 @@ void Game::player_end_message(bool& didPlayerWin) {
     cout << "Your score is: " << total_score << endl;;
     cout << "Press any key to go back to main menu!" << endl;
     cin >> ch;
-}
-
-void Game::initLivesAndScore() {
-    pacman.set_lives(MAX_NUMBER_OF_LIVES);
-    total_score = 0;
 }
