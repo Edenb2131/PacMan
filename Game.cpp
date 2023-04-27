@@ -73,6 +73,16 @@ void Game::updatePositionAccordingToUser(int& x, int& y, char prev_direction, ch
     switch (direction) { 
     case SCREEN_FREEZE:
         is_screen_frozen = !is_screen_frozen;
+
+        if (is_screen_frozen) {
+            gotoxy(23, HEIGHT - 1);
+            cout << "Game pauesed, press ESC to continue";
+        }
+        else {
+            gotoxy(23, HEIGHT - 1);
+            cout << "                                    ";
+        }
+
         direction = prev_direction;
         break;
     case RIGHT_LOWER_CASE: 
@@ -220,5 +230,5 @@ void Game::player_end_message(bool& didPlayerWin) {
     char ch;
     cout << "Your score is: " << total_score << endl;;
     cout << "Press any key to go back to main menu!" << endl;
-    cin >> ch;
+    while(!_kbhit());
 }

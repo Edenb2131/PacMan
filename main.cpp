@@ -25,6 +25,10 @@ int main() {
             cout << "Thanks for playing PAC-MAN!" << endl;
             exit(0);
         }
+        else {
+            cout << "Invalid choice. Please try again." << endl;
+            exit(1);
+        }
         cout << endl;
     }
 
