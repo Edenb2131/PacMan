@@ -12,6 +12,7 @@ static void print_InstAndKeys();
 int main() {
 
     while (true) {
+
         print_menu();
         int choice = get_players_choice();
         if (choice == START) {
@@ -26,8 +27,8 @@ int main() {
             exit(0);
         }
         else {
-            cout << "Invalid choice. Please try again." << endl;
-            exit(1);
+            cin.clear();
+            cin.ignore(INT_MAX, '\n');
         }
         cout << endl;
     }
@@ -42,7 +43,7 @@ int get_players_choice() {
 
     if (choice != START && choice != INSTRUCTIONS && choice != EXIT) {
         cout << "Invalid choice. Please try again." << endl;
-        cin >> choice;
+        
     }
     return choice;
 }
