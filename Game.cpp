@@ -227,7 +227,6 @@ void Game::player_end_message(bool& didPlayerWin) {
         // Game has ended - player won
         cout << "YOU WON THE GAME!" << endl;
     }
-    char ch;
     cout << "Your score is: " << total_score << endl;;
     cout << "Press any key to go back to main menu!" << endl;
     while(!_kbhit());
