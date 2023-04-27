@@ -145,6 +145,7 @@
     <ClCompile Include="GhostManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pacman.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="GhostManager.h" />
     <ClInclude Include="Pacman.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />

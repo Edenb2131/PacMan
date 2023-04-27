@@ -229,9 +229,12 @@ void Game::player_end_message(bool& didPlayerWin) {
     }
     cout << "Your score is: " << total_score << endl;;
     cout << "Press any key to go back to main menu!" << endl;
-    while(!_kbhit());
-
-    Sleep(100);
+    // Wait for a keyboard hit from the user
+    while (!_kbhit()) {
+        Sleep(100);
+    };
+    // Consume the keyboard hit
+    _getch();
 
     // clear the screen for a fresh game (:
     clrscreen();
