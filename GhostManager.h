@@ -2,6 +2,7 @@
 
 #include <array>
 #include "Ghost.h"
+#include "Cell.h"
 
 
 #define GHOST_1_X_STARTING_POS 11
@@ -12,10 +13,10 @@
 
 class GhostManager
 {
-	std::array<Ghost*, NUMBER_OF_GHOSTS> ghosts;
+	std::vector<Ghost*> ghosts;
 
 public:
-	GhostManager();
+	GhostManager(std::vector<Cell>& cellsOfGhosts);
 	~GhostManager();
 
 	bool moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board);

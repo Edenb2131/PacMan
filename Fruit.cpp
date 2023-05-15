@@ -4,7 +4,7 @@ using namespace std;
 
 Fruit::Fruit() : Creature()
 {
-    symbol = rand() % 5 + 5;
+    fruitValue = rand() % 5 + 5;
     Creature::setShouldUpdate(4);
     hoverAbove = ' ';
     direction = DOWN_LOWER_CASE;
@@ -12,15 +12,16 @@ Fruit::Fruit() : Creature()
 
 Fruit::Fruit(int x, int y, int speed) : Creature(x, y, speed)
 {
-    symbol = rand() % 5 + 5;
+    fruitValue = rand() % 5 + 5;
 }
 
 Fruit::~Fruit()
 {
 }
 
-char Fruit::get_symbol_as_char(){
-    switch (symbol)
+char Fruit::get_fruit_value_as_char(){
+
+    switch (fruitValue)
     {
     case 5:
         return '5';
@@ -45,7 +46,7 @@ char Fruit::get_symbol_as_char(){
 
 void Fruit::moveToStartingPosition(Board* board)
 {
-    board->setCell(Creature::getX(), Creature::getY(), symbol);
+    board->setCell(Creature::getX(), Creature::getY(), fruitValue);
 }
 
 void Fruit::move(Board* board){
@@ -75,16 +76,16 @@ void Fruit::move(Board* board){
         updateXY(board);
 
         hoverAbove = board->getCell(getX(), getY());
-        board->setCell(getX(), getY(), get_symbol_as_char());
+        board->setCell(getX(), getY(), get_fruit_value_as_char());
         Game::gotoxy(getX(), getY());
-        cout << get_symbol_as_char() << endl;
+        cout << get_fruit_value_as_char() << endl;
 
         setShouldUpdate(0);
         cycle_time--;
     }
     else {
         int speed = getShouldUpdate();
-        setShouldUpdate(++speed); // update ghosts alternately to make them move slower then pacman.
+        setShouldUpdate(++speed); // update fruits to make them move slower then pacman.
     }
 }
 

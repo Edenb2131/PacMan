@@ -12,6 +12,7 @@ class Board;
 class Pacman;
 
 #define START 1
+#define BEST 1
 #define INSTRUCTIONS 8
 #define EXIT 9
 #define GOOD 2
@@ -43,7 +44,7 @@ class Game {
     Board* board;
     Pacman pacman;
     Fruit* fruit;
-    GhostManager ghostManager;
+    GhostManager* ghostManager;
     GameStatus playOneRound(int x, int y, char d);
 
 public:

@@ -10,12 +10,15 @@ void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch);
 
 Game::Game() {
     board = new Board(pacman.get_lives(), total_score);
+    vector<Cell> ghostsCells = board->getGhostsStartingPosition();
+    ghostManager = new GhostManager(ghostsCells);
     total_score = 0;
-
 }
 
 Game::~Game() {
     delete(board);
+    delete(ghostManager);
+    // check if need to delete fruits
 }
 
 
@@ -48,7 +51,7 @@ void Game::getDifficultyFromUser(){
     int level;
     cout << "Please choose a level (1-3): ";
     cin >> level;
-    while (level < 1 || level > 3) {
+    while (level != 1 && level != 2 && level != 3) {
         cout << "Please choose a level (1-3): ";
         cin >> level;
     }
@@ -80,7 +83,7 @@ void Game::start() {
             pacman.set_lives(--lives);
 
             // move all ghosts to their strting position
-            ghostManager.moveGhostsToStartingPosition(board);
+            ghostManager->moveGhostsToStartingPosition(board);
             
             // Announcing that life has been taken
             gotoxy(WIDTH / 2 - 10, HEIGHT - 1);
@@ -211,7 +214,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
             //cout << boardCell << endl;
 
             updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, boardCell);
-            total_score += fruit->get_symbol();
+            total_score += fruit->get_fruit_value();
 
             // Make a new fruit after we ate the last one
             delete fruit;
@@ -232,7 +235,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
 
 
         // Handle ghosts
-        bool didCollideWithGhost = ghostManager.moveAndCheckCollision(prev_x, prev_y, x, y, board);
+        bool didCollideWithGhost = ghostManager->moveAndCheckCollision(prev_x, prev_y, x, y, board);
         if (didCollideWithGhost) {
             return GameStatus::PlayerLost;
         }
@@ -244,7 +247,6 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
     }
 
     // Handle dismissing the fruit from screen after lost of life
-    //fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
     char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
     updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, FruitCell);
 
