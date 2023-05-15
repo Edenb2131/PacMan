@@ -1,12 +1,14 @@
 #include "GhostManager.h"
 
-GhostManager::GhostManager() {
-	ghosts[0] = new Ghost(GHOST_1_X_STARTING_POS, GHOST_1_Y_STARTING_POS);
-	ghosts[1] = new Ghost(GHOST_2_X_STARTING_POS, GHOST_2_Y_STARTING_POS);
+GhostManager::GhostManager(std::vector<Cell>& cellsOfGhosts) {
+	for (int i = 0; i < cellsOfGhosts.size(); i++) {
+		Ghost* newGhost = new Ghost(cellsOfGhosts[i].getX(), cellsOfGhosts[i].getY());
+		ghosts.push_back(newGhost);
+	}
 }
 
 GhostManager::~GhostManager() {
-	for (int i = 0; i < NUMBER_OF_GHOSTS; i++)
+	for (int i = 0; i < ghosts.size(); i++)
 		delete(ghosts[i]);
 }
 

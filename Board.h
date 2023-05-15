@@ -7,6 +7,7 @@
 #include <string>
 #include <array>
 #include "Game.h"
+#include "Cell.h"
 
 #define WIDTH 80
 #define HEIGHT 25
@@ -27,6 +28,7 @@ public:
     void print_last_row(int _lives, int _score);
     int gettotalNumberOfBreadcrumbs() const { return totalNumberOfBreadcrumbs; }
     int countTotalNumberOfBreadcrumbs() const;
+    std::vector<Cell> getGhostsStartingPosition() const;
 };
 
 

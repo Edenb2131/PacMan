@@ -18,7 +18,7 @@ int UI::get_players_choice_for_diff() {
 
     cin >> choice;
 
-    while (choice != START && choice != GOOD && choice != NOVICE) {
+    while (choice != BEST && choice != GOOD && choice != NOVICE) {
         cout << "Invalid choice. Please try again." << endl;
         cin >> choice;
     }
