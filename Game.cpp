@@ -3,15 +3,20 @@
 #include <Windows.h>
 #include <conio.h>
 #include <iostream>
+#include "FileHandler.h"
 using namespace std;
 
 void clrscreen();  // prototype
-void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch);
+void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch); // prototype
 
 Game::Game() {
-    board = new Board(pacman.get_lives(), total_score);
+    pacman = new Pacman();
+    board = new Board(pacman->get_lives(), total_score);
     vector<Cell> ghostsCells = board->getGhostsStartingPosition();
     ghostManager = new GhostManager(ghostsCells);
+    board->getPacManStaringPostion(pacman);
+    FileHandler* map;
+    Fruit* fruit;
     total_score = 0;
 }
 
@@ -23,7 +28,7 @@ Game::~Game() {
 
 
 bool Game::isGameFinished(bool& didPlayerWin) {
-    return pacman.get_lives() <= 0 || didPlayerWin;
+    return pacman->get_lives() <= 0 || didPlayerWin;
  }
 
 
@@ -62,25 +67,27 @@ void Game::start() {
     // Start the game
     bool didPlayerWin = false;
 
+
+
     // Main game loop
     while (!isGameFinished(didPlayerWin)) {
         // Get starting proporties for Pac-Man
-        int pacman_x = pacman.get_x_pos();
-        int pacman_y = pacman.get_y_pos();
-        int lives = pacman.get_lives();
+        int pacman_x = pacman->get_x_pos();
+        int pacman_y = pacman->get_y_pos();
+        int lives = pacman->get_lives();
         
         cin.clear(); // This is to flush the buffer
-        char direction = pacman.get_direction();
+        char direction = pacman->get_direction();
 
         clrscreen();
-        board->print(pacman.get_lives(), total_score);
+        board->print(pacman->get_lives(), total_score);
         fruit = new Fruit();
         // play 1 life
         GameStatus status = playOneRound(pacman_x, pacman_y, direction);
         
         if (status == GameStatus::PlayerLost) {
             // Set life for Pac-Man
-            pacman.set_lives(--lives);
+            pacman->set_lives(--lives);
 
             // move all ghosts to their strting position
             ghostManager->moveGhostsToStartingPosition(board);
@@ -204,7 +211,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
             x = 0;
 
         Game::gotoxy(x, y);
-        cout << pacman.get_pacman_char() << endl;
+        cout << pacman->get_pacman_char() << endl;
 
         // Handle Fruit
         didCollideWithFruit = fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
@@ -247,8 +254,8 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
     }
 
     // Handle dismissing the fruit from screen after lost of life
-    char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
-    updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, FruitCell);
+    //char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
+    //updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, FruitCell);
 
 
     if (total_score >= board->gettotalNumberOfBreadcrumbs()) {

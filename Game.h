@@ -42,7 +42,7 @@ class Game {
     int total_score = 0;
     int difficulty = -1;
     Board* board;
-    Pacman pacman;
+    Pacman* pacman;
     Fruit* fruit;
     GhostManager* ghostManager;
     GameStatus playOneRound(int x, int y, char d);

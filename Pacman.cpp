@@ -9,3 +9,5 @@ Pacman::Pacman() {
     y_pos = PACMAN_Y_STARTING_POS;
     direction = 's';
 }
+
+

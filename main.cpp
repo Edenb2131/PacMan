@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "Game.h"
 #include "UI.h"
+#include "FileHandler.h"
 
 using namespace std;
 

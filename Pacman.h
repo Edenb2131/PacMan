@@ -2,11 +2,14 @@
 #define PACMAN_GAME_PACMAN_H
 
 #include <iostream>
+#include "Game.h"
+#include "Board.h"
 
 #define PACMAN_CHAR '@'
 #define MAX_NUMBER_OF_LIVES 3
 #define PACMAN_X_STARTING_POS 39
 #define PACMAN_Y_STARTING_POS 16
+
 
 class Pacman {
     int lives;

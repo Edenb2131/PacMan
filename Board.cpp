@@ -10,7 +10,7 @@ Board::Board(int _lives, int _score) {
     for (int i = 0; i < HEIGHT; i++)
         board[i].resize(WIDTH);
 
-    array<string, HEIGHT> map_sketch = {
+ /*   array<string, HEIGHT> map_sketch = {
             "################################################################################",
             "#..........$...........................#............................$..........#",
             "#...## ###...######### #############...#...############## #########...### ##...#",
@@ -42,6 +42,16 @@ Board::Board(int _lives, int _score) {
             board[i][j] = map_sketch[i][j];
         }
     }
+
+    */
+
+
+    FileHandler* maps = new FileHandler();
+    maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+//    maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+//    maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+
+
     print_last_row(_lives, _score);
     totalNumberOfBreadcrumbs = countTotalNumberOfBreadcrumbs();
 }
@@ -97,6 +107,10 @@ void Board::print_last_row(int _lives, int _score) {
      board[y][x] = ch;
  }
 
+ void Board::setCellInvers(int x, int y, char ch) {
+     board[x][y] = ch;
+ }
+
  char Board::getCell(int x, int y) const {
      return board[y][x];
  }
@@ -125,3 +139,16 @@ void Board::print_last_row(int _lives, int _score) {
      }
      return ghostsLocations;
 }
+
+ void Board::getPacManStaringPostion(Pacman* pacman) const
+ {
+     for (int i = 0; i < HEIGHT - 1; i++) {
+         for (int j = 0; j < WIDTH; j++) {
+             if (board[i][j] == PACMAN_CHAR) {
+                    pacman->set_x_pos(j);
+                    pacman->set_y_pos(i);
+             }
+         }
+     }
+
+ }
