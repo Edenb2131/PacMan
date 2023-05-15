@@ -3,15 +3,21 @@
 
 #include <iostream>
 
-class Board;
-class Pacman;
 #include "Board.h"
 #include "Pacman.h"
+#include "Fruit.h"
 #include "GhostManager.h"
+class Fruit;
+class Board;
+class Pacman;
 
 #define START 1
 #define INSTRUCTIONS 8
 #define EXIT 9
+#define GOOD 2
+#define NOVICE 3
+#define COLLIDEWITHFRUIT 88
+#define COLLIDEWITHGHOST 99
 #define UP_LOWER_CASE 'w'
 #define UP_UPPER_CASE 'W'
 #define DOWN_LOWER_CASE 'x'
@@ -33,8 +39,10 @@ enum class GameStatus {
 
 class Game {
     int total_score = 0;
+    int difficulty = -1;
     Board* board;
     Pacman pacman;
+    Fruit* fruit;
     GhostManager ghostManager;
     GameStatus playOneRound(int x, int y, char d);
 
@@ -42,6 +50,10 @@ public:
     Game();
     ~Game();
     void start();
+    void setDifficulty(int difficulty);
+    void getDifficultyFromUser();
+    int getDifficulty() { return difficulty;}
+    std::string getDifficultyString(); 
     void player_end_message(bool& didPlayerWin);
     static void gotoxy(int x, int y);
     bool isGameFinished(bool& didPlayerWin);

@@ -6,10 +6,12 @@
 using namespace std;
 
 void clrscreen();  // prototype
+void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch);
 
 Game::Game() {
     board = new Board(pacman.get_lives(), total_score);
     total_score = 0;
+
 }
 
 Game::~Game() {
@@ -21,6 +23,37 @@ bool Game::isGameFinished(bool& didPlayerWin) {
     return pacman.get_lives() <= 0 || didPlayerWin;
  }
 
+
+void Game::setDifficulty(int _difficulty) {
+    difficulty = _difficulty;
+}
+
+string Game::getDifficultyString(){
+    switch (difficulty) {
+    case 1:
+        // Ghosts try to chase the pacmen
+        return "Best";
+    case 2: 
+        // Ghosts try to chase the pacmen, but sometimes they get confused (randomly once in ~~20 moves)
+        return "Medium";
+    case 3:
+        // Ghosts just move on screen with a random direction every 20 moves
+        return "Hard";
+    default:
+        return "Unknown";
+    }
+}
+
+void Game::getDifficultyFromUser(){
+    int level;
+    cout << "Please choose a level (1-3): ";
+    cin >> level;
+    while (level < 1 || level > 3) {
+        cout << "Please choose a level (1-3): ";
+        cin >> level;
+    }
+    setDifficulty(level);
+}
 
 void Game::start() {
     // Start the game
@@ -38,7 +71,7 @@ void Game::start() {
 
         clrscreen();
         board->print(pacman.get_lives(), total_score);
-
+        fruit = new Fruit();
         // play 1 life
         GameStatus status = playOneRound(pacman_x, pacman_y, direction);
         
@@ -130,14 +163,19 @@ void Game::updatePositionAccordingToUser(int& x, int& y, char prev_direction, ch
 GameStatus Game::playOneRound(int x, int y, char direction) {
 
     bool is_screen_frozen = false;
-    
+    int prev_x_fruit, prev_y_fruit;
+    int prev_x, prev_y;
+
     while (!check_if_hit_obstacle(x, y) && total_score < board->gettotalNumberOfBreadcrumbs()) {
 
         int prev_x = x, prev_y = y;
+        prev_x_fruit = fruit->getX(), prev_y_fruit = fruit->getY();
         char prev_direction = direction;
+        bool didCollideWithFruit = false;
         
         if (_kbhit())
             direction = _getch();
+
         updatePositionAccordingToUser(x, y, prev_direction, direction, is_screen_frozen);
         if (is_screen_frozen) {
             Sleep(200);
@@ -151,6 +189,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
             boardCell = EMPTY;
             total_score++;
         }
+
         Game::gotoxy(prev_x, prev_y);
         cout << boardCell << endl;      
         
@@ -164,9 +203,37 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
         Game::gotoxy(x, y);
         cout << pacman.get_pacman_char() << endl;
 
+        // Handle Fruit
+        didCollideWithFruit = fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
+        if(didCollideWithFruit){
+            //board->setCell(fruit->getX(), fruit->getY(), boardCell);
+            //Game::gotoxy(prev_x, prev_y);
+            //cout << boardCell << endl;
+
+            updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, boardCell);
+            total_score += fruit->get_symbol();
+
+            // Make a new fruit after we ate the last one
+            delete fruit;
+            fruit = new Fruit();
+        }
+
+        // Handle a cycle time for a fruit
+        if(fruit->cycle_time == 0){
+            
+            // Make sure we impement the rellevent char on the board
+            char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
+            updateBoardAndScreen(prev_x_fruit, prev_y_fruit, board, fruit, FruitCell);
+
+            // Make a new fruit after sometime passed
+            delete fruit;
+            fruit = new Fruit();
+        }
+
+
         // Handle ghosts
-        bool didCollide = ghostManager.moveAndCheckCollision(prev_x, prev_y, x, y, board);
-        if (didCollide) {
+        bool didCollideWithGhost = ghostManager.moveAndCheckCollision(prev_x, prev_y, x, y, board);
+        if (didCollideWithGhost) {
             return GameStatus::PlayerLost;
         }
 
@@ -175,6 +242,12 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
 
         Sleep(200);
     }
+
+    // Handle dismissing the fruit from screen after lost of life
+    fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
+    char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
+    updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, FruitCell);
+
 
     if (total_score >= board->gettotalNumberOfBreadcrumbs()) {
         return GameStatus::PlayerWon;
@@ -238,4 +311,16 @@ void Game::player_end_message(bool& didPlayerWin) {
 
     // clear the screen for a fresh game (:
     clrscreen();
+}
+
+
+void updateBoardAndScreen(int x, int y, Board* board , Fruit* fruit ,char ch) {
+
+    // Make sure we impement the rellevent char on the board
+
+    board->setCell(fruit->getX(), fruit->getY(), ch);
+
+    Game::gotoxy(fruit->getX(), fruit->getY());
+    cout << ch << endl;
+
 }

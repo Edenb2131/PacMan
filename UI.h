@@ -8,7 +8,9 @@ class UI
 {
 public:
 	static int get_players_choice();
+	static int get_players_choice_for_diff();
 	static void print_menu();
+	static void print_difficulty_menu();
 	static void print_InstAndKeys();
 };
 

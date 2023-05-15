@@ -13,6 +13,18 @@ int UI::get_players_choice() {
     return choice;
 }
 
+int UI::get_players_choice_for_diff() {
+    int choice;
+
+    cin >> choice;
+
+    while (choice != START && choice != GOOD && choice != NOVICE) {
+        cout << "Invalid choice. Please try again." << endl;
+        cin >> choice;
+    }
+    return choice;
+}
+
 
 void UI::print_menu() {
     // Present the menu
@@ -20,6 +32,14 @@ void UI::print_menu() {
     cout << "1. Start a new Game" << endl;
     cout << "8. Present instructions and keys" << endl;
     cout << "9. Quit" << endl;
+}
+
+void UI::print_difficulty_menu() {
+    // Present the difficulty menu
+    cout << "Please choose a difficulty level:" << endl;
+    cout << "1. Best" << endl;
+    cout << "2. GOOD" << endl;
+    cout << "3. NOVICE" << endl;
 }
 
 void UI::print_InstAndKeys() {

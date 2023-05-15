@@ -1,8 +1,8 @@
-#ifndef PACMAN_GAME_GHOST_MANAGER_H
-#define PACMAN_GAME_GHOST_MANAGER_H
+#pragma once
 
 #include <array>
 #include "Ghost.h"
+
 
 #define GHOST_1_X_STARTING_POS 11
 #define GHOST_1_Y_STARTING_POS 1
@@ -21,7 +21,3 @@ public:
 	bool moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board);
 	void moveGhostsToStartingPosition(Board* board);
 };
-
-
-#endif //PACMAN_GAME_GHOST_MANAGER_H
-

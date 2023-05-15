@@ -5,7 +5,7 @@
 using namespace std;
 
 
-Ghost::Ghost(int x, int y) {
+Ghost::Ghost(int x, int y) : Creature() {
     move_speed = 1;
     initial_x_pos = x;
     initial_y_pos = y;
@@ -13,11 +13,11 @@ Ghost::Ghost(int x, int y) {
     y_pos = y;
     direction = DOWN_LOWER_CASE;
     hoverAbove = BREADCRUMB;
-    shouldUpdate = true;
+    setShouldUpdate(move_speed);
 }
 
 void Ghost::move(Board* board) {
-    if (shouldUpdate) {
+    if (getShouldUpdate() == 1) {
         int prev_x = x_pos;
         int prev_y = y_pos;
         board->setCell(prev_x, prev_y, hoverAbove);
@@ -30,8 +30,14 @@ void Ghost::move(Board* board) {
         board->setCell(x_pos, y_pos, get_ghost_char());
         Game::gotoxy(x_pos, y_pos);
         cout << get_ghost_char() << endl;
+
+        setShouldUpdate(0) ;
     }
-    shouldUpdate = !shouldUpdate; // update ghosts alternately to make them move slower then pacman.
+    else{
+        int speed = getShouldUpdate();
+        setShouldUpdate(++ speed); // update ghosts alternately to make them move slower then pacman.
+    }
+
 }
 
 void Ghost::updateXY() {

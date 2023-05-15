@@ -2,10 +2,11 @@
 #define PACMAN_GAME_GHOST_H
 
 class Board;
+#include "Creature.h"
 
 #define GHOST_CHAR '$'
 
-class Ghost {
+class Ghost  : public Creature {
     int move_speed;
     int initial_x_pos;
     int initial_y_pos;
@@ -13,8 +14,7 @@ class Ghost {
     int y_pos;
     char direction;
     char hoverAbove;
-    bool shouldUpdate;
-
+    
 public:
 
     Ghost(int x, int y);
