@@ -244,7 +244,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
     }
 
     // Handle dismissing the fruit from screen after lost of life
-    fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
+    //fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
     char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
     updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, FruitCell);
 
