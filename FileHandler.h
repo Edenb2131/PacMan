@@ -13,10 +13,15 @@ class Board;
 
 class FileHandler
 {
-
+   
 public:
+    int did_load;
     FileHandler();
     ~FileHandler();
+
+    // operator overloading
+    FileHandler& operator=(const FileHandler& other);
+
 
     void readMapFromFile(Board* board, const std::string &name_of_file);
 

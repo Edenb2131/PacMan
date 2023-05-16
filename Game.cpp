@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Ghost.h"
+#include "UI.h"
 #include <Windows.h>
 #include <conio.h>
 #include <iostream>
@@ -11,11 +12,14 @@ void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch); //
 
 Game::Game() {
     pacman = new Pacman();
-    board = new Board(pacman->get_lives(), total_score);
+
+    UI::print_game_maps_choice();
+    map_choice = UI::get_players_choice_for_maps();
+
+    board = new Board(pacman->get_lives(), total_score, map_choice);
     vector<Cell> ghostsCells = board->getGhostsStartingPosition();
     ghostManager = new GhostManager(ghostsCells);
     board->getPacManStaringPostion(pacman);
-    FileHandler* map;
     Fruit* fruit;
     total_score = 0;
 }
@@ -67,6 +71,8 @@ void Game::start() {
     // Start the game
     bool didPlayerWin = false;
 
+   
+    //////// NEED TO FIX MAP_CHOICE = 1 MEAING WHEN YOU WANT TO PLAY CONTINUSELY /////////
 
 
     // Main game loop
@@ -99,6 +105,11 @@ void Game::start() {
             Sleep(2000);
         }
         else if (status == GameStatus::PlayerWon) {
+
+            if (map_choice == 1) {
+                
+            }
+
             didPlayerWin = true;
         }
     }
@@ -174,7 +185,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
 
     bool is_screen_frozen = false;
     int prev_x_fruit, prev_y_fruit;
-    int prev_x, prev_y;
+    int prev_x = x, prev_y = y;
 
     while (!check_if_hit_obstacle(x, y) && total_score < board->gettotalNumberOfBreadcrumbs()) {
 

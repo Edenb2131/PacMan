@@ -17,6 +17,7 @@ class Pacman;
 #define EXIT 9
 #define GOOD 2
 #define NOVICE 3
+#define NUMBER_Of_MAPS 3
 #define COLLIDEWITHFRUIT 88
 #define COLLIDEWITHGHOST 99
 #define UP_LOWER_CASE 'w'
@@ -41,6 +42,7 @@ enum class GameStatus {
 class Game {
     int total_score = 0;
     int difficulty = -1;
+    int map_choice = -1;
     Board* board;
     Pacman* pacman;
     Fruit* fruit;

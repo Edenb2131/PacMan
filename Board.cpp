@@ -3,7 +3,7 @@
 using namespace std;
 
 
-Board::Board(int _lives, int _score) {
+Board::Board(int _lives, int _score, int map_choice) {
 
     // Making the board size of 25x80
     board.resize(HEIGHT);
@@ -44,13 +44,52 @@ Board::Board(int _lives, int _score) {
     }
 
     */
+    maps.resize(3);
+    for ( int i = 0 ; i < 3; i ++){
+        maps[i].did_load = 0;
+    }
 
+    if(map_choice == 1){ // means we going continuesly throw levels
+        maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+        maps[0].did_load = 1;
+        maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+        maps[1].did_load = 1;
+        maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+        maps[2].did_load = 1;
+    }
+    else if(map_choice == 2) {// means we are picking a random level
+        int random = rand() % 3;
+        if (random == 0) {
+            maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+            maps[0].did_load = 1;
+        }
+        else if (random == 1) {
+            maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+            maps[1].did_load = 1;
+        }
+        else {
+            maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+            maps[2].did_load = 1;
+        }
+    }
+    else if(map_choice == 3) { // means the player choose a spesific map
+        int map_number;
+        UI::get_players_choice_for_maps(map_number);
 
-    FileHandler* maps = new FileHandler();
-    maps[0].readMapFromFile(this, "pacman_a.screen.txt");
-//    maps[1].readMapFromFile(this, "pacman_b.screen.txt");
-//    maps[2].readMapFromFile(this, "pacman_c.screen.txt");
-
+        if (map_number == 1) {
+            maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+            maps[0].did_load = 1;
+        }
+        else if (map_number == 2) {
+            maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+            maps[1].did_load = 1;
+        }
+        else {
+            maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+            maps[2].did_load = 1;
+        }
+    }
+    
 
     print_last_row(_lives, _score);
     totalNumberOfBreadcrumbs = countTotalNumberOfBreadcrumbs();
@@ -140,13 +179,15 @@ void Board::print_last_row(int _lives, int _score) {
      return ghostsLocations;
 }
 
- void Board::getPacManStaringPostion(Pacman* pacman) const
+ void Board::getPacManStaringPostion(Pacman* pacman) 
  {
      for (int i = 0; i < HEIGHT - 1; i++) {
          for (int j = 0; j < WIDTH; j++) {
              if (board[i][j] == PACMAN_CHAR) {
                     pacman->set_x_pos(j);
                     pacman->set_y_pos(i);
+                    board[i][j] = EMPTY;
+                    return;
              }
          }
      }

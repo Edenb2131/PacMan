@@ -11,7 +11,7 @@
 
 using namespace std;
 
-FileHandler::FileHandler() {}
+FileHandler::FileHandler() { did_load = -1;}
 
 FileHandler::~FileHandler() {}
 
@@ -31,16 +31,20 @@ void FileHandler::readMapFromFile(Board* board, const string &name_of_file) {
     }
 
     // set the board
-    for(int i = 0; i < HEIGHT - 2; i++) {
+    for(int i = 0; i < HEIGHT - 1; i++) {
         for(int j = 0; j < WIDTH; j++) {
             board->setCellInvers(i, j, lines[i][j]);
-
-            
-
         }
         cout << endl;
     }
-
-
     file.close();
+    
+}
+
+
+FileHandler& FileHandler::operator=(const FileHandler& other) {
+    if (this != &other) {
+        did_load = other.did_load;
+    }
+    return *this;
 }

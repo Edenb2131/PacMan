@@ -25,6 +25,33 @@ int UI::get_players_choice_for_diff() {
     return choice;
 }
 
+int UI::get_players_choice_for_maps() {
+    int choice;
+
+    cin >> choice;
+
+    while (choice != BEST && choice != GOOD && choice != NOVICE) {
+        cout << "Invalid choice. Please try again." << endl;
+        cin >> choice;
+    }
+    return choice;
+}
+
+void UI::get_players_choice_for_maps(int &choice) {
+    
+    cout << "Please enter the number of the map you wish to play on: " << endl;
+    cout << "1. Map 1" << endl;	
+    cout << "2. Map 2" << endl;
+    cout << "3. Map 3" << endl;
+    cin >> choice;
+
+        while (choice != BEST && choice != GOOD && choice != NOVICE) {
+        cout << "Invalid choice. Please try again." << endl;
+        cin >> choice;
+    }
+
+}
+
 
 void UI::print_menu() {
     // Present the menu
@@ -53,4 +80,13 @@ void UI::print_InstAndKeys() {
     cout << "   a or A arrow - move left" << endl;
     cout << "   d or D arrow - move right" << endl;
     cout << "   s or S arrow - stay" << endl;
+}
+
+void UI::print_game_maps_choice(){
+    // print the options of maps
+    cout << "Please chose how you wish two play: " << endl;
+    cout << "1. Play countinuesly throw the levels" << endl;
+    cout << "2. Play on a random map" << endl;
+    cout << "3. Play on a map of your choice" << endl;
+
 }
