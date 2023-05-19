@@ -2,8 +2,6 @@
 #define PACMAN_GAME_PACMAN_H
 
 #include <iostream>
-#include "Game.h"
-#include "Board.h"
 
 #define PACMAN_CHAR '@'
 #define MAX_NUMBER_OF_LIVES 3

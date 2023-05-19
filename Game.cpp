@@ -18,15 +18,14 @@ Game::Game() {
 
     board = new Board(pacman->get_lives(), total_score, map_choice);
     vector<Cell> ghostsCells = board->getGhostsStartingPosition();
-    ghostManager = new GhostManager(ghostsCells);
+    creatureManager = new CreatureManagar(ghostsCells, difficulty);
     board->getPacManStaringPostion(pacman);
-    Fruit* fruit;
     total_score = 0;
 }
 
 Game::~Game() {
     delete(board);
-    delete(ghostManager);
+    delete(creatureManager);
     // check if need to delete fruits
 }
 
@@ -87,7 +86,6 @@ void Game::start() {
 
         clrscreen();
         board->print(pacman->get_lives(), total_score);
-        fruit = new Fruit();
         // play 1 life
         GameStatus status = playOneRound(pacman_x, pacman_y, direction);
         
@@ -96,7 +94,7 @@ void Game::start() {
             pacman->set_lives(--lives);
 
             // move all ghosts to their strting position
-            ghostManager->moveGhostsToStartingPosition(board);
+            creatureManager->moveCreatureToStartingPosition(board);
             
             // Announcing that life has been taken
             gotoxy(WIDTH / 2 - 10, HEIGHT - 1);
@@ -184,15 +182,12 @@ void Game::updatePositionAccordingToUser(int& x, int& y, char prev_direction, ch
 GameStatus Game::playOneRound(int x, int y, char direction) {
 
     bool is_screen_frozen = false;
-    int prev_x_fruit, prev_y_fruit;
     int prev_x = x, prev_y = y;
 
     while (!check_if_hit_obstacle(x, y) && total_score < board->gettotalNumberOfBreadcrumbs()) {
 
         int prev_x = x, prev_y = y;
-        prev_x_fruit = fruit->getX(), prev_y_fruit = fruit->getY();
         char prev_direction = direction;
-        bool didCollideWithFruit = false;
         
         if (_kbhit())
             direction = _getch();
@@ -203,7 +198,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
             continue;
         }
 
-        // If eat breadcrumbs then chnage the score
+        // If eat breadcrumbs then change the score
         char boardCell = board->getCell(prev_x, prev_y);
         if (boardCell == BREADCRUMB) {
             board->setCell(prev_x, prev_y, EMPTY);
@@ -224,38 +219,16 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
         Game::gotoxy(x, y);
         cout << pacman->get_pacman_char() << endl;
 
-        // Handle Fruit
-        didCollideWithFruit = fruit->moveAndCheckCollision(prev_x, prev_y, x, y, board);
-        if(didCollideWithFruit){
-            //board->setCell(fruit->getX(), fruit->getY(), boardCell);
-            //Game::gotoxy(prev_x, prev_y);
-            //cout << boardCell << endl;
 
-            updateBoardAndScreen(fruit->getX(), fruit->getY(), board, fruit, boardCell);
-            total_score += fruit->get_fruit_value();
-
-            // Make a new fruit after we ate the last one
-            delete fruit;
-            fruit = new Fruit();
-        }
-
-        // Handle a cycle time for a fruit
-        if(fruit->cycle_time == 0){
-            
-            // Make sure we impement the rellevent char on the board
-            char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
-            updateBoardAndScreen(prev_x_fruit, prev_y_fruit, board, fruit, FruitCell);
-
-            // Make a new fruit after sometime passed
-            delete fruit;
-            fruit = new Fruit();
-        }
-
-
-        // Handle ghosts
-        bool didCollideWithGhost = ghostManager->moveAndCheckCollision(prev_x, prev_y, x, y, board);
+        // Handle creatures
+        int addedFruitScore = 0;
+        bool didCollideWithFruit = false;
+        bool didCollideWithGhost = creatureManager->moveAndCheckCollision(prev_x, prev_y, x, y, board, addedFruitScore, didCollideWithFruit);
         if (didCollideWithGhost) {
             return GameStatus::PlayerLost;
+        }
+        if (didCollideWithFruit) {
+            total_score += addedFruitScore;
         }
 
         // Update the score on board

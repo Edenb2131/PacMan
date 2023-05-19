@@ -1,9 +1,7 @@
-#ifndef PACMAN_GAME_FRUIT_H
-#define PACMAN_GAME_FRUIT_H
+#pragma once
 
-#include "Board.h"
-#include "Ghost.h"
 #include "Creature.h"
+#include "Board.h"
 
 #include <random>
 
@@ -11,23 +9,25 @@
 
 class Fruit : public Creature
 {
+protected:
     int fruitValue;
+    int cycle_time = 10;
 
 
+    virtual void UpdatePosition(Board* board);
+    virtual char GetCreatureChar();
+    
 public:
     
-    int cycle_time = 10;
+
+    void ResetFruit();
 
     Fruit();
     Fruit(int x, int y, int speed);
     ~Fruit();
     int get_fruit_value() {return fruitValue;}
-    char get_fruit_value_as_char();
-
-	bool moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board);
+    
     void moveToStartingPosition(Board* board);
-    void move(Board* board);
-    void updateXY(Board* board);
+    
+    void disappear(Board* board);
 };
-
-#endif //PACMAN_GAME_FRUIT_H

@@ -2,7 +2,6 @@
 #define PACMAN_GAME_UI_H
 
 #include <iostream>
-#include "Game.h"
 
 class UI
 {

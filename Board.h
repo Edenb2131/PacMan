@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include <array>
-#include "Game.h"
 #include "Pacman.h"
 #include "FileHandler.h"
 #include "Cell.h"

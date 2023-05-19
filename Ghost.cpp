@@ -1,66 +1,68 @@
 #include "Ghost.h"
 #include "Board.h"
-
+#include "Game.h"
 #include <iostream>
 using namespace std;
 
 
-Ghost::Ghost(int x, int y) : Creature() {
-    move_speed = 1;
+Ghost::Ghost(int x, int y, int difficulty) : Creature(1) {
     initial_x_pos = x;
     initial_y_pos = y;
-    x_pos = x;
-    y_pos = y;
+    this->x = x;
+    this->y = y;
     direction = DOWN_LOWER_CASE;
     hoverAbove = BREADCRUMB;
-    setShouldUpdate(move_speed);
+    this->difficulty = difficulty;
 }
 
-void Ghost::move(Board* board) {
-    if (getShouldUpdate() == 1) {
-        int prev_x = x_pos;
-        int prev_y = y_pos;
-        board->setCell(prev_x, prev_y, hoverAbove);
-        Game::gotoxy(prev_x, prev_y);
-        cout << hoverAbove << endl;
-
-        updateXY();
-
-        hoverAbove = board->getCell(x_pos, y_pos);
-        board->setCell(x_pos, y_pos, get_ghost_char());
-        Game::gotoxy(x_pos, y_pos);
-        cout << get_ghost_char() << endl;
-
-        setShouldUpdate(0) ;
+bool IsNextMoveFree(const Board* board, const Cell& position, char direction) {
+    Cell nextMove = position;
+    if (direction == DOWN_LOWER_CASE) {
+        nextMove.setY(nextMove.getY() + 1);
     }
-    else{
-        int speed = getShouldUpdate();
-        setShouldUpdate(++ speed); // update ghosts alternately to make them move slower then pacman.
+    if (direction == UP_LOWER_CASE) {
+        nextMove.setY(nextMove.getY() - 1);
     }
-
+    if (direction == LEFT_LOWER_CASE) {
+        nextMove.setX(nextMove.getX() - 1);
+    }
+    if (direction == RIGHT_LOWER_CASE) {
+        nextMove.setX(nextMove.getX() + 1);
+    }
+    return board->getCell(nextMove.getX(), nextMove.getY()) != '#';
 }
 
-void Ghost::updateXY() {
-    if (direction == DOWN_LOWER_CASE && y_pos < HEIGHT-3 && y_pos >= 1) {
-        y_pos++;
+char Ghost::ChoosePosition(Board* board) {
+    if (difficulty == 1 || true) {  // Move randomly when hitting a wall.
+        while (!IsNextMoveFree(board, Cell(x, y), direction)) {
+            const static char moves[4] = { DOWN_LOWER_CASE, UP_LOWER_CASE,  LEFT_LOWER_CASE, RIGHT_LOWER_CASE };
+            direction = moves[rand() % 4];
+        }
     }
-    else if (direction == DOWN_LOWER_CASE && y_pos == HEIGHT - 3) {
-        direction = UP_LOWER_CASE;
-        y_pos--;
+    // TODO: implement other difficulties.
+    return direction;
+}
+
+
+void Ghost::UpdatePosition(Board* board) {
+    ChoosePosition(board);
+    if (direction == DOWN_LOWER_CASE) {
+        y++;
     }
-    else if (direction == UP_LOWER_CASE && y_pos == 1) {
-        direction = DOWN_LOWER_CASE;
-        y_pos++;
+    else if (direction == UP_LOWER_CASE) {
+        y--;
     }
-    else if (direction == UP_LOWER_CASE && y_pos < HEIGHT - 3 && y_pos >= 1) {
-        direction = UP_LOWER_CASE;
-        y_pos--;
+    else if (direction == LEFT_LOWER_CASE) {
+        x--;
+    }
+    else if (direction == RIGHT_LOWER_CASE) {
+        x++;
     }
 }
 
 void Ghost::moveToStartingPosition(Board* board) {
-    board->setCell(x_pos, y_pos, hoverAbove);
-    x_pos = initial_x_pos;
-    y_pos = initial_y_pos;
+    board->setCell(x, y, hoverAbove);
+    x = initial_x_pos;
+    y = initial_y_pos;
     board->setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);
 }

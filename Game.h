@@ -5,8 +5,7 @@
 
 #include "Board.h"
 #include "Pacman.h"
-#include "Fruit.h"
-#include "GhostManager.h"
+#include "CreatureManagar.h"
 class Fruit;
 class Board;
 class Pacman;
@@ -45,8 +44,7 @@ class Game {
     int map_choice = -1;
     Board* board;
     Pacman* pacman;
-    Fruit* fruit;
-    GhostManager* ghostManager;
+    CreatureManagar* creatureManager;
     GameStatus playOneRound(int x, int y, char d);
 
 public:
