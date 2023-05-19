@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <iostream>
+#include "Game.h"
 using namespace std;
 
 
@@ -172,13 +173,14 @@ void Board::print_last_row(int _lives, int _score) {
      for (int i = 0; i < HEIGHT - 1; i++) {
          for (int j = 0; j < WIDTH; j++) {
              if (board[i][j] == GHOST_CHAR) {
-                 ghostsLocations.push_back(Cell(j, i)); // check if it should be Cell(j,i)
+                 ghostsLocations.push_back(Cell(j, i));
              }
          }
      }
      return ghostsLocations;
 }
 
+ // gets the init positions of the pacman
  void Board::getPacManStaringPostion(Pacman* pacman) 
  {
      for (int i = 0; i < HEIGHT - 1; i++) {

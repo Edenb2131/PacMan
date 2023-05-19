@@ -1,4 +1,5 @@
 #include "Fruit.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -143,9 +144,8 @@ void Fruit::updateXY(Board* board)
 
 bool Fruit::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board) {
 
-	//for (Fruit* fruit : fruits) {
 		int prev_fruit_x_pos = getX();
-		int prev_fruitt_y_pos = getY();
+		int prev_fruit_y_pos = getY();
 
 		move(board);
 		int curr_fruit_x_pos = getX();
@@ -154,9 +154,13 @@ bool Fruit::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, 
 		if (curr_fruit_x_pos == curr_pacman_x_pos && curr_fruit_y_pos == curr_pacman_y_pos)
 			return true;
 		else if (prev_fruit_x_pos == curr_pacman_x_pos && curr_fruit_x_pos == prev_pacman_x_pos &&
-                prev_fruitt_y_pos == curr_pacman_y_pos && curr_fruit_y_pos == prev_pacman_y_pos)
+                prev_fruit_y_pos == curr_pacman_y_pos && curr_fruit_y_pos == prev_pacman_y_pos)
 			return true;
-//	}
+
 	return false;
+}
+
+void Fruit::disappear(Board* board) {
+    board->setCell(this->getX(), this->getY(), this->hoverAbove);
 }
 

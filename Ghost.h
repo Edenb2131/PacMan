@@ -1,7 +1,7 @@
 #ifndef PACMAN_GAME_GHOST_H
 #define PACMAN_GAME_GHOST_H
 
-class Board;
+#include "Board.h"
 #include "Creature.h"
 
 #define GHOST_CHAR '$'

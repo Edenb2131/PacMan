@@ -1,4 +1,5 @@
 #include "UI.h"
+#include "Game.h"
 using namespace std;
 
 int UI::get_players_choice() {

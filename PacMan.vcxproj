@@ -146,7 +146,7 @@
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Ghost.cpp" />
-    <ClCompile Include="GhostManager.cpp" />
+    <ClCompile Include="CreatureManagar.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Ghost.h" />
-    <ClInclude Include="GhostManager.h" />
+    <ClInclude Include="CreatureManagar.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="UI.h" />

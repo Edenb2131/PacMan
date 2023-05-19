@@ -1,9 +1,7 @@
-#ifndef PACMAN_GAME_FRUIT_H
-#define PACMAN_GAME_FRUIT_H
+#pragma once
 
-#include "Board.h"
-#include "Ghost.h"
 #include "Creature.h"
+#include "Board.h"
 
 #include <random>
 
@@ -28,6 +26,5 @@ public:
     void moveToStartingPosition(Board* board);
     void move(Board* board);
     void updateXY(Board* board);
+    void disappear(Board* board);
 };
-
-#endif //PACMAN_GAME_FRUIT_H
