@@ -152,6 +152,12 @@ void Board::print_last_row(int _lives, int _score) {
  }
 
  char Board::getCell(int x, int y) const {
+     if (y < 0 || y >= board.size()) {
+         return '#'; //TODO: replace with consts.
+     }
+     if (x < 0 || x >= board[y].size()) {
+         return '#';
+     }
      return board[y][x];
  }
 

@@ -21,7 +21,7 @@ private:
 	bool DidCollide(Cell creature_prev, Cell creature_curr, Cell pacmen_prev, Cell pacmen_curr);
 
 public:
-	CreatureManagar(std::vector<Cell>& cellsOfGhosts, int amountOfFruits=4);
+	CreatureManagar(std::vector<Cell>& cellsOfGhosts, int difficulty, int amountOfFruits=4);
 	~CreatureManagar();
 
 	bool moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board, int& addedFruitScore, bool& didCollideWithFruit);

@@ -101,7 +101,7 @@ void Fruit::UpdatePosition(Board* board)
 }
 
 void Fruit::disappear(Board* board) {
-    if (hoverAbove == '.' || hoverAbove == ' ') {
+    if (hoverAbove == '.' || hoverAbove == ' ' || hoverAbove == '#') {
         board->setCell(this->getX(), this->getY(), this->hoverAbove);
         Game::gotoxy(getX(), getY());
         cout << hoverAbove;

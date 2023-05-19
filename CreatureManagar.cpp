@@ -1,8 +1,8 @@
 #include "CreatureManagar.h"
 
-CreatureManagar::CreatureManagar(std::vector<Cell>& cellsOfGhosts, int amountOfFruits) {
+CreatureManagar::CreatureManagar(std::vector<Cell>& cellsOfGhosts, int difficulty, int amountOfFruits) {
 	for (int i = 0; i < cellsOfGhosts.size(); i++) {
-		Ghost* newGhost = new Ghost(cellsOfGhosts[i].getX(), cellsOfGhosts[i].getY());
+		Ghost* newGhost = new Ghost(cellsOfGhosts[i].getX(), cellsOfGhosts[i].getY(), difficulty);
 		ghosts.push_back(newGhost);
 	}
 	for (int i = 0; i < amountOfFruits; i++) {

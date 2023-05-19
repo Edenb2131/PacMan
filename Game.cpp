@@ -18,7 +18,7 @@ Game::Game() {
 
     board = new Board(pacman->get_lives(), total_score, map_choice);
     vector<Cell> ghostsCells = board->getGhostsStartingPosition();
-    creatureManager = new CreatureManagar(ghostsCells);
+    creatureManager = new CreatureManagar(ghostsCells, difficulty);
     board->getPacManStaringPostion(pacman);
     total_score = 0;
 }
