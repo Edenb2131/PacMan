@@ -9,8 +9,8 @@ Ghost::Ghost(int x, int y) : Creature() {
     move_speed = 1;
     initial_x_pos = x;
     initial_y_pos = y;
-    x_pos = x;
-    y_pos = y;
+    this->x = x;
+    this->y = y;
     direction = DOWN_LOWER_CASE;
     hoverAbove = BREADCRUMB;
     setShouldUpdate(move_speed);
@@ -18,17 +18,21 @@ Ghost::Ghost(int x, int y) : Creature() {
 
 void Ghost::move(Board* board) {
     if (getShouldUpdate() == 1) {
-        int prev_x = x_pos;
-        int prev_y = y_pos;
-        board->setCell(prev_x, prev_y, hoverAbove);
-        Game::gotoxy(prev_x, prev_y);
-        cout << hoverAbove << endl;
+        int prev_x = x;
+        int prev_y = y;
+        
+        //TODO: change to use constants.
+        if (hoverAbove == ' ' || hoverAbove == '.') {
+            board->setCell(prev_x, prev_y, hoverAbove);
+            Game::gotoxy(prev_x, prev_y);
+            cout << hoverAbove << endl;
+        }
 
         updateXY();
 
-        hoverAbove = board->getCell(x_pos, y_pos);
-        board->setCell(x_pos, y_pos, get_ghost_char());
-        Game::gotoxy(x_pos, y_pos);
+        hoverAbove = board->getCell(x, y);
+        board->setCell(x, y, get_ghost_char());
+        Game::gotoxy(x, y);
         cout << get_ghost_char() << endl;
 
         setShouldUpdate(0) ;
@@ -41,26 +45,26 @@ void Ghost::move(Board* board) {
 }
 
 void Ghost::updateXY() {
-    if (direction == DOWN_LOWER_CASE && y_pos < HEIGHT-3 && y_pos >= 1) {
-        y_pos++;
+    if (direction == DOWN_LOWER_CASE && y < HEIGHT-3 && y >= 1) {
+        y++;
     }
-    else if (direction == DOWN_LOWER_CASE && y_pos == HEIGHT - 3) {
+    else if (direction == DOWN_LOWER_CASE && y == HEIGHT - 3) {
         direction = UP_LOWER_CASE;
-        y_pos--;
+        y--;
     }
-    else if (direction == UP_LOWER_CASE && y_pos == 1) {
+    else if (direction == UP_LOWER_CASE && y == 1) {
         direction = DOWN_LOWER_CASE;
-        y_pos++;
+        y++;
     }
-    else if (direction == UP_LOWER_CASE && y_pos < HEIGHT - 3 && y_pos >= 1) {
+    else if (direction == UP_LOWER_CASE && y < HEIGHT - 3 && y >= 1) {
         direction = UP_LOWER_CASE;
-        y_pos--;
+        y--;
     }
 }
 
 void Ghost::moveToStartingPosition(Board* board) {
-    board->setCell(x_pos, y_pos, hoverAbove);
-    x_pos = initial_x_pos;
-    y_pos = initial_y_pos;
+    board->setCell(x, y, hoverAbove);
+    x = initial_x_pos;
+    y = initial_y_pos;
     board->setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);
 }

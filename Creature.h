@@ -4,7 +4,8 @@
 
 class Creature
 {
-
+protected:
+	// TODO: change to Cell.
 	int x;
 	int y;
 	int shouldUpdate;
