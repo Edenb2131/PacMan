@@ -7,25 +7,18 @@
 #define GHOST_CHAR '$'
 
 class Ghost  : public Creature {
-    int move_speed;
+protected:
     int initial_x_pos;
     int initial_y_pos;
     
+    virtual void UpdatePosition(Board* board);
+    virtual char GetCreatureChar() { return GHOST_CHAR; }
+
 public:
 
     Ghost(int x, int y);
-    char get_ghost_char() const { return GHOST_CHAR; }
-    int get_move_speed() const { return move_speed; }
-    int get_x_pos() { return x; }
-    int get_y_pos() { return y; }
-    char get_direction() const { return direction; }
 
-    void set_move_speed(int _move_speed) { this->move_speed = _move_speed; }
-    void set_x_pos(int _x_pos) { this->x = _x_pos; }
-    void set_y_pos(int _y_pos) { this->y = _y_pos; }
-
-    void move(Board* board);
-    void updateXY();
+    // TODO: move to ghost manager
     void moveToStartingPosition(Board* board);
 };
 

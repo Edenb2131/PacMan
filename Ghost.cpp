@@ -5,46 +5,16 @@
 using namespace std;
 
 
-Ghost::Ghost(int x, int y) : Creature() {
-    move_speed = 1;
+Ghost::Ghost(int x, int y) : Creature(1) {
     initial_x_pos = x;
     initial_y_pos = y;
     this->x = x;
     this->y = y;
     direction = DOWN_LOWER_CASE;
     hoverAbove = BREADCRUMB;
-    setShouldUpdate(move_speed);
 }
 
-void Ghost::move(Board* board) {
-    if (getShouldUpdate() == 1) {
-        int prev_x = x;
-        int prev_y = y;
-        
-        //TODO: change to use constants.
-        if (hoverAbove == ' ' || hoverAbove == '.') {
-            board->setCell(prev_x, prev_y, hoverAbove);
-            Game::gotoxy(prev_x, prev_y);
-            cout << hoverAbove << endl;
-        }
-
-        updateXY();
-
-        hoverAbove = board->getCell(x, y);
-        board->setCell(x, y, get_ghost_char());
-        Game::gotoxy(x, y);
-        cout << get_ghost_char() << endl;
-
-        setShouldUpdate(0) ;
-    }
-    else{
-        int speed = getShouldUpdate();
-        setShouldUpdate(++ speed); // update ghosts alternately to make them move slower then pacman.
-    }
-
-}
-
-void Ghost::updateXY() {
+void Ghost::UpdatePosition(Board* board) {
     if (direction == DOWN_LOWER_CASE && y < HEIGHT-3 && y >= 1) {
         y++;
     }

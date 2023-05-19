@@ -1,11 +1,13 @@
 #include "CreatureManagar.h"
 
-CreatureManagar::CreatureManagar(std::vector<Cell>& cellsOfGhosts) {
+CreatureManagar::CreatureManagar(std::vector<Cell>& cellsOfGhosts, int amountOfFruits) {
 	for (int i = 0; i < cellsOfGhosts.size(); i++) {
 		Ghost* newGhost = new Ghost(cellsOfGhosts[i].getX(), cellsOfGhosts[i].getY());
 		ghosts.push_back(newGhost);
 	}
-	fruit = new Fruit();
+	for (int i = 0; i < amountOfFruits; i++) {
+		fruits.push_back(new Fruit());
+	}
 }
 
 CreatureManagar::~CreatureManagar() {
@@ -15,40 +17,43 @@ CreatureManagar::~CreatureManagar() {
 
 // check collision after moving the ghosts.
 bool CreatureManagar::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board, int& addedFruitScore, bool& didCollideWithFruit) { 
-	prev_x_fruit = fruit->getX(), prev_y_fruit = fruit->getY();
-	// Handle Fruit
-	didCollideWithFruit = fruit->moveAndCheckCollision(prev_pacman_x_pos, prev_pacman_y_pos, curr_pacman_x_pos, curr_pacman_y_pos, board);
-	if (didCollideWithFruit) {
-		addedFruitScore = fruit->get_fruit_value();
-		fruit->disappear(board);
-		delete fruit;
-		fruit = new Fruit();
+	Cell pacmen_curr = Cell(curr_pacman_x_pos, curr_pacman_y_pos);
+	Cell pacmen_prev = Cell(prev_pacman_x_pos, prev_pacman_y_pos);
+	
+	// Handle Fruits.
+	for (Fruit* fruit : fruits) {
+		Cell fruit_prev = fruit->getPosition();
+		fruit->move(board);
+		Cell fruit_curr = fruit->getPosition();
+		bool didCollideWithCurrentFruit = DidCollide(fruit_prev, fruit_curr, pacmen_prev, pacmen_curr);
+		if (didCollideWithCurrentFruit) {
+			didCollideWithFruit = true;
+			addedFruitScore = fruit->get_fruit_value();
+			fruit->disappear(board);
+			fruit->ResetFruit();
+			fruit->move(board);
+		}
 	}
 
-	// Handle a cycle time for a fruit
-	if (fruit->cycle_time == 0) {
-
-		// Make sure we impement the rellevent char on the board
-		char FruitCell = board->getCell(prev_x_fruit, prev_y_fruit);
-		fruit->disappear(board);
-
-		// Make a new fruit after sometime passed
-		delete fruit;
-		fruit = new Fruit();
-	}
-
+	// Handle ghosts.
 	for (Ghost* ghost : ghosts) {
-		int prev_ghost_x_pos = ghost->get_x_pos();
-		int prev_ghost_y_pos = ghost->get_y_pos();
+		Cell ghost_prev = ghost->getPosition();
 		ghost->move(board);
-		int curr_ghost_x_pos = ghost->get_x_pos();
-		int curr_ghost_y_pos = ghost->get_y_pos();
+		Cell ghost_curr = ghost->getPosition();
 
-		if (curr_ghost_x_pos == curr_pacman_x_pos && curr_ghost_y_pos == curr_pacman_y_pos)
+		if (DidCollide(ghost_prev, ghost_curr, pacmen_prev, pacmen_curr)) {
 			return true;
-		else if (prev_ghost_x_pos == curr_pacman_x_pos && curr_ghost_x_pos == prev_pacman_x_pos && 
-				 prev_ghost_y_pos == curr_pacman_y_pos && curr_ghost_y_pos == prev_pacman_y_pos)
-			return true;
+		}
+	}
+	return false;
+}
+
+bool CreatureManagar::DidCollide(Cell creature_prev, Cell creature_curr, Cell pacmen_prev, Cell pacmen_curr) {
+	if (creature_curr.Equals(pacmen_curr)) {
+		return true;
+	}
+	if (creature_curr.Equals(pacmen_prev) && creature_prev.Equals(pacmen_curr)) {
+		return true;
 	}
 	return false;
 }

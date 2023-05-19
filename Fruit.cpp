@@ -3,10 +3,9 @@
 
 using namespace std;
 
-Fruit::Fruit() : Creature()
+Fruit::Fruit() : Creature(4)
 {
     fruitValue = rand() % 5 + 5;
-    Creature::setShouldUpdate(4);
     hoverAbove = ' ';
     direction = DOWN_LOWER_CASE;
 }
@@ -20,7 +19,7 @@ Fruit::~Fruit()
 {
 }
 
-char Fruit::get_fruit_value_as_char(){
+char Fruit::GetCreatureChar(){
 
     if (fruitValue <= 9 && fruitValue >= 5) {
         return '0' + fruitValue;
@@ -34,49 +33,21 @@ void Fruit::moveToStartingPosition(Board* board)
     board->setCell(Creature::getX(), Creature::getY(), fruitValue);
 }
 
-void Fruit::move(Board* board){
-
-    if (getShouldUpdate() == FRUIT_SPEED) {
-        int prev_x = getX();
-        int prev_y = getY();
-
-        // To make sure we didnt land on a wall
-        while (board->getCell(prev_x, prev_y) == '#') {
-
-            prev_x = rand() % 70 + 1;
-            prev_y = rand() % 20 + 1;
-        }
-
-        char ch = board->getCell(prev_x, prev_y);
-
-        if (ch == ' ')
-            hoverAbove = ' ';
-        if (ch == '.')
-            hoverAbove = '.';
-
-        board->setCell(prev_x, prev_y, hoverAbove);
-        Game::gotoxy(prev_x, prev_y);
-        cout << hoverAbove << endl;
-
-        updateXY(board);
-
-        hoverAbove = board->getCell(getX(), getY());
-        board->setCell(getX(), getY(), get_fruit_value_as_char());
-        Game::gotoxy(getX(), getY());
-        cout << get_fruit_value_as_char() << endl;
-
-        setShouldUpdate(0);
-        cycle_time--;
-    }
-    else {
-        int speed = getShouldUpdate();
-        setShouldUpdate(++speed); // update fruits to make them move slower then pacman.
-    }
+void Fruit::ResetFruit() {
+    x = rand() % 70 + 1;
+    y = rand() % 20 + 1;
+    fruitValue = rand() % 5 + 5;
+    cycle_time = 10;    //TODO: make not arab.
 }
 
-
-void Fruit::updateXY(Board* board)
+void Fruit::UpdatePosition(Board* board)
 {
+    if (cycle_time == 0) {
+        ResetFruit();
+        return;
+    }
+    cycle_time--;
+
     int new_x = getX();
     int new_y = getY();
 
@@ -119,6 +90,9 @@ void Fruit::updateXY(Board* board)
                 break;
             }
         }
+        if (board->getCell(new_x, new_y) == '$') {
+            cycle_time = 0;
+        }
     }
     else { // Move to the new position
         setX(new_x);
@@ -126,25 +100,11 @@ void Fruit::updateXY(Board* board)
     }
 }
 
-bool Fruit::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board) {
-
-		int prev_fruit_x_pos = getX();
-		int prev_fruit_y_pos = getY();
-
-		move(board);
-		int curr_fruit_x_pos = getX();
-		int curr_fruit_y_pos = getY();
-
-		if (curr_fruit_x_pos == curr_pacman_x_pos && curr_fruit_y_pos == curr_pacman_y_pos)
-			return true;
-		else if (prev_fruit_x_pos == curr_pacman_x_pos && curr_fruit_x_pos == prev_pacman_x_pos &&
-                prev_fruit_y_pos == curr_pacman_y_pos && curr_fruit_y_pos == prev_pacman_y_pos)
-			return true;
-
-	return false;
-}
-
 void Fruit::disappear(Board* board) {
-    board->setCell(this->getX(), this->getY(), this->hoverAbove);
+    if (hoverAbove == '.' || hoverAbove == ' ') {
+        board->setCell(this->getX(), this->getY(), this->hoverAbove);
+        Game::gotoxy(getX(), getY());
+        cout << hoverAbove;
+    }
 }
 

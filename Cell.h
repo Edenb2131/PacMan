@@ -11,6 +11,9 @@ public:
 	~Cell() = default;
 	int getX() { return x; }
 	int getY() { return y; }
+	bool Equals(const Cell& other) const {
+		return x == other.x && y == other.y;
+	}
 };
 
 
