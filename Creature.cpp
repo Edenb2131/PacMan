@@ -41,7 +41,7 @@ void Creature::setShouldUpdate(int shouldUpdate)
     this->shouldUpdate = shouldUpdate;
 }
 
-void Creature::move(Board* board) {
+void Creature::move(Board* board, Cell pacmenPosition) {
     if (getShouldUpdate() == 0) {
         int prev_x = x;
         int prev_y = y;
@@ -53,7 +53,7 @@ void Creature::move(Board* board) {
             cout << hoverAbove << endl;
         }
 
-        UpdatePosition(board);
+        UpdatePosition(board, pacmenPosition);
 
         hoverAbove = board->getCell(x, y);
         board->setCell(x, y, GetCreatureChar());

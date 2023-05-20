@@ -20,25 +20,26 @@ bool CreatureManagar::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacm
 	Cell pacmen_curr = Cell(curr_pacman_x_pos, curr_pacman_y_pos);
 	Cell pacmen_prev = Cell(prev_pacman_x_pos, prev_pacman_y_pos);
 	
+	addedFruitScore = 0;
 	// Handle Fruits.
 	for (Fruit* fruit : fruits) {
 		Cell fruit_prev = fruit->getPosition();
-		fruit->move(board);
+		fruit->move(board, pacmen_curr);
 		Cell fruit_curr = fruit->getPosition();
 		bool didCollideWithCurrentFruit = DidCollide(fruit_prev, fruit_curr, pacmen_prev, pacmen_curr);
 		if (didCollideWithCurrentFruit) {
 			didCollideWithFruit = true;
-			addedFruitScore = fruit->get_fruit_value();
+			addedFruitScore += fruit->get_fruit_value();
 			fruit->disappear(board);
 			fruit->ResetFruit();
-			fruit->move(board);
+			fruit->move(board, pacmen_curr);
 		}
 	}
 
 	// Handle ghosts.
 	for (Ghost* ghost : ghosts) {
 		Cell ghost_prev = ghost->getPosition();
-		ghost->move(board);
+		ghost->move(board, pacmen_curr);
 		Cell ghost_curr = ghost->getPosition();
 
 		if (DidCollide(ghost_prev, ghost_curr, pacmen_prev, pacmen_curr)) {

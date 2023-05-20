@@ -5,7 +5,7 @@ using namespace std;
 
 Fruit::Fruit() : Creature(4)
 {
-    fruitValue = rand() % 5 + 5;
+    ResetFruit();
     hoverAbove = ' ';
     direction = DOWN_LOWER_CASE;
 }
@@ -33,6 +33,7 @@ void Fruit::moveToStartingPosition(Board* board)
     board->setCell(Creature::getX(), Creature::getY(), fruitValue);
 }
 
+// TODO: get board, if on # then random again. If over '.' then fix 'hover_above'.
 void Fruit::ResetFruit() {
     x = rand() % 70 + 1;
     y = rand() % 20 + 1;
@@ -40,7 +41,7 @@ void Fruit::ResetFruit() {
     cycle_time = 10;    //TODO: make not arab.
 }
 
-void Fruit::UpdatePosition(Board* board)
+void Fruit::UpdatePosition(Board* board, Cell pacmenPosition)
 {
     if (cycle_time == 0) {
         ResetFruit();

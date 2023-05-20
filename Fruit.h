@@ -14,8 +14,8 @@ protected:
     int cycle_time = 10;
 
 
-    virtual void UpdatePosition(Board* board);
-    virtual char GetCreatureChar();
+    virtual void UpdatePosition(Board* board, Cell pacmenPosition) override;
+    virtual char GetCreatureChar() override;
     
 public:
     

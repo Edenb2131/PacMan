@@ -12,7 +12,7 @@ protected:
 	int shouldUpdate;
 	const int moveFrequency;
 
-	virtual void UpdatePosition(Board* board) = 0;
+	virtual void UpdatePosition(Board* board, Cell pacmenPosition) = 0;
 	virtual char GetCreatureChar() = 0;
 
 public:
@@ -34,5 +34,5 @@ public:
 	void setY(int y);
 	void setShouldUpdate(int shouldUpdate);
 
-	void move(Board* board);
+	void move(Board* board, Cell pacmenPosition);
 };

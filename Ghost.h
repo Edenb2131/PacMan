@@ -12,10 +12,10 @@ protected:
     int initial_y_pos;
     int difficulty;
     
-    char ChoosePosition(Board* board);
+    char ChoosePosition(Board* board, Cell pacmenPosition);
 
-    virtual void UpdatePosition(Board* board);
-    virtual char GetCreatureChar() { return GHOST_CHAR; }
+    virtual void UpdatePosition(Board* board, Cell pacmenPosition) override;
+    virtual char GetCreatureChar() override { return GHOST_CHAR; }
 
 public:
 

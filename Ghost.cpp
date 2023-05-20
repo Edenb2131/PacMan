@@ -2,6 +2,9 @@
 #include "Board.h"
 #include "Game.h"
 #include <iostream>
+#include <queue>
+#include <unordered_set>
+#include <utility>
 using namespace std;
 
 
@@ -32,20 +35,60 @@ bool IsNextMoveFree(const Board* board, const Cell& position, char direction) {
     return board->getCell(nextMove.getX(), nextMove.getY()) != '#';
 }
 
-char Ghost::ChoosePosition(Board* board) {
-    if (difficulty == 1 || true) {  // Move randomly when hitting a wall.
+char BFS(const Cell& source, const Cell& target, const Board* board) {
+    queue<pair<Cell, char>> q;
+    unordered_set<std::string> seenCells;
+
+    pair<Cell, char> curr = pair<Cell,char>(source, ' ');
+
+    while (!curr.first.Equals(target)) {
+        auto up = curr; up.first.setY(up.first.getY() - 1);
+        if (up.second == ' ') up.second = UP_LOWER_CASE;
+
+        auto down = curr; down.first.setY(down.first.getY() + 1);
+        if (down.second == ' ') down.second = DOWN_LOWER_CASE;
+
+        auto left = curr; left.first.setX(left.first.getX() - 1);
+        if (left.second == ' ') left.second = LEFT_LOWER_CASE;
+
+        auto right = curr; right.first.setX(right.first.getX() + 1);
+        if (right.second == ' ') right.second = RIGHT_LOWER_CASE;
+
+        for (const auto& neighbor : { up, down, left,  right }) {
+            if (seenCells.find((std::string)neighbor.first) != seenCells.end()) {
+                continue;
+            }
+            if (board->getCell(neighbor.first.getX(), neighbor.first.getY()) != '#') {
+                q.push(neighbor);
+                seenCells.insert((std::string)neighbor.first);
+            }
+        }
+        if (q.empty()) {
+            return STAY_LOWER_CASE;
+        }
+        curr = q.front();
+        q.pop();
+    }
+    return curr.second; // Returnt the direction
+}
+
+char Ghost::ChoosePosition(Board* board, Cell pacmenPosition) {
+    if (difficulty == 1) {  // Move randomly when hitting a wall.
         while (!IsNextMoveFree(board, Cell(x, y), direction)) {
             const static char moves[4] = { DOWN_LOWER_CASE, UP_LOWER_CASE,  LEFT_LOWER_CASE, RIGHT_LOWER_CASE };
             direction = moves[rand() % 4];
         }
+    }
+    else {
+        direction = BFS(Cell(x, y), pacmenPosition, board);
     }
     // TODO: implement other difficulties.
     return direction;
 }
 
 
-void Ghost::UpdatePosition(Board* board) {
-    ChoosePosition(board);
+void Ghost::UpdatePosition(Board* board, Cell pacmenPosition) {
+    ChoosePosition(board, pacmenPosition);
     if (direction == DOWN_LOWER_CASE) {
         y++;
     }
