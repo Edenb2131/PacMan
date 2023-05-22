@@ -6,6 +6,7 @@
 #include <random>
 
 #define FRUIT_SPEED 4
+#define FRUIT_CYCLE_TIME 10
 
 class Fruit : public Creature
 {

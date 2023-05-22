@@ -184,11 +184,11 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
     bool is_screen_frozen = false;
     int prev_x = x, prev_y = y;
 
-    while (!check_if_hit_obstacle(x, y) && total_score < board->gettotalNumberOfBreadcrumbs()) {
+    while (total_score < board->gettotalNumberOfBreadcrumbs()) {
 
         int prev_x = x, prev_y = y;
         char prev_direction = direction;
-        
+
         if (_kbhit())
             direction = _getch();
 
@@ -196,6 +196,13 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
         if (is_screen_frozen) {
             Sleep(200);
             continue;
+        }
+
+        // If we hit a wall we change the direction to stay and hold our place
+        if (check_if_hit_wall(x, y)) { 
+            x = prev_x;
+            y = prev_y;
+            direction = 's';
         }
 
         // If eat breadcrumbs then change the score
@@ -268,15 +275,15 @@ void clrscreen()
 }
 
 // function that checks if we hit a wall
-bool Game::check_if_hit_obstacle(int x, int y) {
+bool Game::check_if_hit_wall(int x, int y) {
     
     // Check if hit the boarder or # sign
-    if (x != 0 && y != 11 || x !=79 && y !=11) // To make sure this wont inturpt swtiching sides
+    if (x != 0 && y != 11 || x != 79 && y != 11) // To make sure this wont inturpt swtiching sides
         if (x == 0 || x == 79 || y == 0 || y == 24)
             return true;
     
     // Check if hit a # sign (wall)
-    if (board->getCell(x,y) == '#')
+    if (board->getCell(x, y) == '#')
         return true;
     
     return false;

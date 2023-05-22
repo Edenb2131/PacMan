@@ -25,7 +25,7 @@ char Fruit::GetCreatureChar(){
         return '0' + fruitValue;
     }
     return '5';
-    //TODO: why 5?
+    //TODO: why 5? - if there is a problem, that we will get a difult value no ?
 }
 
 void Fruit::moveToStartingPosition(Board* board)
@@ -38,7 +38,7 @@ void Fruit::ResetFruit() {
     x = rand() % 70 + 1;
     y = rand() % 20 + 1;
     fruitValue = rand() % 5 + 5;
-    cycle_time = 10;    //TODO: make not arab.
+    cycle_time = FRUIT_CYCLE_TIME;    //TODO: make not arab ??????
 }
 
 void Fruit::UpdatePosition(Board* board, Cell pacmenPosition)

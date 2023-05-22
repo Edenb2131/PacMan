@@ -59,7 +59,7 @@ public:
     static void gotoxy(int x, int y);
     bool isGameFinished(bool& didPlayerWin);
     void updatePositionAccordingToUser(int& x, int& y, char prev_direction, char& direction, bool& is_screen_frozen);
-    bool check_if_hit_obstacle(int x, int y);
+    bool check_if_hit_wall(int x, int y);
 };            
 
 #endif //PACMAN_GAME_GAME_H
