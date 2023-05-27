@@ -15,12 +15,34 @@ CreatureManagar::~CreatureManagar() {
 		delete(ghosts[i]);
 }
 
+// TODO: move somewhere else
+struct GostPositions {
+	Cell prev;
+	Cell curr;
+
+	GostPositions(Cell prev, Cell  curr): prev(prev), curr(curr){}
+};
+
 // check collision after moving the ghosts.
 bool CreatureManagar::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacman_y_pos, int curr_pacman_x_pos, int curr_pacman_y_pos, Board* board, int& addedFruitScore, bool& didCollideWithFruit) { 
 	Cell pacmen_curr = Cell(curr_pacman_x_pos, curr_pacman_y_pos);
 	Cell pacmen_prev = Cell(prev_pacman_x_pos, prev_pacman_y_pos);
 	
 	addedFruitScore = 0;
+	// Handle ghosts.
+	vector<GostPositions> ghosts_positions;
+	for (Ghost* ghost : ghosts) {
+		Cell ghost_prev = ghost->getPosition();
+		ghost->move(board, pacmen_curr);
+		Cell ghost_curr = ghost->getPosition();
+
+		if (DidCollide(ghost_prev, ghost_curr, pacmen_prev, pacmen_curr)) {
+			return true;
+		}
+		ghosts_positions.push_back(GostPositions(ghost_prev, ghost_curr));
+	}
+
+
 	// Handle Fruits.
 	for (Fruit* fruit : fruits) {
 		Cell fruit_prev = fruit->getPosition();
@@ -32,20 +54,17 @@ bool CreatureManagar::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacm
 			addedFruitScore += fruit->get_fruit_value();
 			fruit->disappear(board);
 			fruit->ResetFruit();
-			fruit->move(board, pacmen_curr);
+		}
+		for (const GostPositions& ghost : ghosts_positions) {
+			bool didGhostCollideWithCurrentFruit = DidCollide(fruit_prev, fruit_curr, ghost.prev, ghost.curr);
+			if (didGhostCollideWithCurrentFruit) {
+				fruit->disappear(board);
+				fruit->ResetFruit();
+				break;
+			}
 		}
 	}
 
-	// Handle ghosts.
-	for (Ghost* ghost : ghosts) {
-		Cell ghost_prev = ghost->getPosition();
-		ghost->move(board, pacmen_curr);
-		Cell ghost_curr = ghost->getPosition();
-
-		if (DidCollide(ghost_prev, ghost_curr, pacmen_prev, pacmen_curr)) {
-			return true;
-		}
-	}
 	return false;
 }
 
