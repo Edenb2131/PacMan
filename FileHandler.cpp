@@ -33,14 +33,25 @@ void FileHandler::readMapFromFile(Board* board, const string &name_of_file) {
     // set the board
     for(int i = 0; i < HEIGHT - 1; i++) {
         for(int j = 0; j < WIDTH; j++) {
-            board->setCellInvers(i, j, lines[i][j]);
+            char convertedChar = ConvertFileCharaterToBoardCharacter(lines[i][j]);
+            board->setCellInvers(i, j, convertedChar);
         }
         cout << endl;
-    }
-    file.close();
-    
+    } 
+    file.close();   
 }
 
+char FileHandler::ConvertFileCharaterToBoardCharacter(char ch) {
+    switch (ch)
+    {
+    case EMPTY_IN_FILE:
+        return EMPTY;
+    case BREADCRUMB_IN_FILE:
+        return BREADCRUMB;
+    default:
+        return ch;
+    }
+}
 
 FileHandler& FileHandler::operator=(const FileHandler& other) {
     if (this != &other) {

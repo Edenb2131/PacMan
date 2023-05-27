@@ -30,8 +30,6 @@ class Pacman;
 #define STAY_LOWER_CASE 's'
 #define STAY_UPPER_CASE 'S'
 #define SCREEN_FREEZE (char)27
-#define BREADCRUMB '.'
-#define EMPTY ' '
 
 enum class GameStatus {
     PlayerWon,

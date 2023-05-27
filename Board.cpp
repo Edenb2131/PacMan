@@ -11,65 +11,31 @@ Board::Board(int _lives, int _score, int map_choice) {
     for (int i = 0; i < HEIGHT; i++)
         board[i].resize(WIDTH);
 
- /*   array<string, HEIGHT> map_sketch = {
-            "################################################################################",
-            "#..........$...........................#............................$..........#",
-            "#...## ###...######### #############...#...############## #########...### ##...#",
-            "#...#    #...#                     #...#...#                      #...#    #...#",
-            "#...#    #...#                     #...#...#                      #...#    #...#",
-            "#...## ###...######### #############...#...############## #########...### ##...#",
-            "#..............................................................................#",
-            "#### #####...#...###################   #   ####################...#...##### ####",
-            "#        #...#............#            #             #............#...#        #",
-            "#        #...##########...#                          #...##########...#        #",
-            "#### #####...##########...#                          #...##########...##### ####",
-            "..........................#                          #..........................",
-            "#### #####...##########...#                          #...##########...##### ####",
-            "#        #...##########...############################...##########...#        #",
-            "#        #...#....................................................#...#        #",
-            "#### #####...#...##############################################...#...##### ####",
-            "#...................................... .......................................#",
-            "#...## ###...######### #############...#...############# ##########...### ##...#",
-            "#...#    #...#                     #...#...#                      #...#    #...#",
-            "#...#    #...#                     #...#...#                      #...#    #...#",
-            "#...#    #...#                     #...#...#                      #...#    #...#",
-            "#...## ###...######### #############...#...############# ##########...### ##...#",
-            "#..........$........................................................$..........#",
-            "################################################################################",
-    };
-
-    for (int i = 0; i < HEIGHT - 1; i++) {
-        for (int j = 0; j < WIDTH; j++) {
-            board[i][j] = map_sketch[i][j];
-        }
-    }
-
-    */
     maps.resize(3);
     for ( int i = 0 ; i < 3; i ++){
         maps[i].did_load = 0;
     }
 
     if(map_choice == 1){ // means we going continuesly throw levels
-        maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+        maps[0].readMapFromFile(this, "pacman_a.screen");
         maps[0].did_load = 1;
-        maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+        maps[1].readMapFromFile(this, "pacman_b.screen");
         maps[1].did_load = 1;
-        maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+        maps[2].readMapFromFile(this, "pacman_c.screen");
         maps[2].did_load = 1;
     }
     else if(map_choice == 2) {// means we are picking a random level
         int random = rand() % 3;
         if (random == 0) {
-            maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+            maps[0].readMapFromFile(this, "pacman_a.screen");
             maps[0].did_load = 1;
         }
         else if (random == 1) {
-            maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+            maps[1].readMapFromFile(this, "pacman_b.screen");
             maps[1].did_load = 1;
         }
         else {
-            maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+            maps[2].readMapFromFile(this, "pacman_c.screen");
             maps[2].did_load = 1;
         }
     }
@@ -78,15 +44,15 @@ Board::Board(int _lives, int _score, int map_choice) {
         UI::get_players_choice_for_maps(map_number);
 
         if (map_number == 1) {
-            maps[0].readMapFromFile(this, "pacman_a.screen.txt");
+            maps[0].readMapFromFile(this, "pacman_a.screen");
             maps[0].did_load = 1;
         }
         else if (map_number == 2) {
-            maps[1].readMapFromFile(this, "pacman_b.screen.txt");
+            maps[1].readMapFromFile(this, "pacman_b.screen");
             maps[1].did_load = 1;
         }
         else {
-            maps[2].readMapFromFile(this, "pacman_c.screen.txt");
+            maps[2].readMapFromFile(this, "pacman_c.screen");
             maps[2].did_load = 1;
         }
     }

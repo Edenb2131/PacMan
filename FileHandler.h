@@ -4,6 +4,10 @@
 #include <string>
 #include "Board.h"
 
+#define BREADCRUMB_IN_FILE ' '
+#define EMPTY_IN_FILE '%'
+
+
 class Board;
 /*
     * This class is responsible for reading the screens and initilize ghosts and Pac-MAn.
@@ -24,6 +28,7 @@ public:
 
 
     void readMapFromFile(Board* board, const std::string &name_of_file);
+    char ConvertFileCharaterToBoardCharacter(char ch);
 
 };
 

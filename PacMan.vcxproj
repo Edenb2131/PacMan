@@ -165,9 +165,9 @@
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="pacman_a.screen.txt" />
-    <Text Include="pacman_b.screen.txt" />
-    <Text Include="pacman_c.screen.txt" />
+    <Text Include="pacman_a.screen" />
+    <Text Include="pacman_b.screen" />
+    <Text Include="pacman_c.screen" />
     <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>

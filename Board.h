@@ -13,6 +13,8 @@
 
 #define WIDTH 80
 #define HEIGHT 25
+#define BREADCRUMB '.'
+#define EMPTY ' '
 
 class Pacman;
 class FileHandler;
