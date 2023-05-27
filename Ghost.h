@@ -11,6 +11,8 @@ protected:
     int initial_x_pos;
     int initial_y_pos;
     int difficulty;
+    int direction_counter;
+    bool is_smart;
     
     char ChoosePosition(Board* board, Cell pacmenPosition);
 

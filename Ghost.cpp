@@ -7,8 +7,10 @@
 #include <utility>
 using namespace std;
 
+#define DIRECTION_COUNTS 20
+#define TIME_IN_STUPID 5
 
-Ghost::Ghost(int x, int y, int difficulty) : Creature(1) {
+Ghost::Ghost(int x, int y, int difficulty) : Creature(1), direction_counter(DIRECTION_COUNTS), is_smart(true) {
     initial_x_pos = x;
     initial_y_pos = y;
     this->x = x;
@@ -72,17 +74,47 @@ char BFS(const Cell& source, const Cell& target, const Board* board) {
     return curr.second; // Returnt the direction
 }
 
+char ChooseRandomDirection(Board* board, Cell position, char direction) {
+   do {
+        const static char moves[4] = { DOWN_LOWER_CASE, UP_LOWER_CASE,  LEFT_LOWER_CASE, RIGHT_LOWER_CASE };
+        direction = moves[rand() % 4];
+   } while (!IsNextMoveFree(board, position, direction));
+    return direction;
+}
+
 char Ghost::ChoosePosition(Board* board, Cell pacmenPosition) {
-    if (difficulty == 1) {  // Move randomly when hitting a wall.
-        while (!IsNextMoveFree(board, Cell(x, y), direction)) {
-            const static char moves[4] = { DOWN_LOWER_CASE, UP_LOWER_CASE,  LEFT_LOWER_CASE, RIGHT_LOWER_CASE };
-            direction = moves[rand() % 4];
+    direction_counter--;
+
+    if (difficulty == 3) {
+        // Move randomly when hitting a wall.
+        if (direction_counter == 0 || !IsNextMoveFree(board, Cell(x, y), direction)) {
+            direction = ChooseRandomDirection(board, Cell(x, y), direction);
+        }
+    }
+    else if (difficulty == 2) {
+        if (direction_counter == 0) {
+            is_smart = !is_smart;
+            if (!is_smart) {
+                direction_counter = TIME_IN_STUPID;
+            }
+        }
+        
+        if (is_smart) {
+            direction = BFS(Cell(x, y), pacmenPosition, board);
+        }
+        // Not smart and just moved to stupid. If blocked, then also choose randomly.
+        else if (direction_counter == TIME_IN_STUPID || !IsNextMoveFree(board, Cell(x, y), direction)) {
+            direction = ChooseRandomDirection(board, Cell(x, y), direction);
         }
     }
     else {
         direction = BFS(Cell(x, y), pacmenPosition, board);
     }
-    // TODO: implement other difficulties.
+
+    if (direction_counter == 0) {
+        direction_counter = DIRECTION_COUNTS;
+    }
+
     return direction;
 }
 

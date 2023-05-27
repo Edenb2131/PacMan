@@ -21,8 +21,7 @@ int main() {
             UI::print_difficulty_menu();
             int difficulty = UI::get_players_choice_for_diff();
 
-            Game game;
-            game.setDifficulty(difficulty);
+            Game game{ difficulty };
             game.start();
             break;
         }

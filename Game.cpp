@@ -10,7 +10,7 @@ using namespace std;
 void clrscreen();  // prototype
 void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch); // prototype
 
-Game::Game() {
+Game::Game(int difficulty): difficulty(difficulty) {
     pacman = new Pacman();
 
     UI::print_game_maps_choice();

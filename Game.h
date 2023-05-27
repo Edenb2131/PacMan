@@ -47,7 +47,7 @@ class Game {
     GameStatus playOneRound(int x, int y, char d);
 
 public:
-    Game();
+    Game(int difficulty);
     ~Game();
     void start();
     void setDifficulty(int difficulty);
