@@ -14,7 +14,7 @@ Ghost::Ghost(int x, int y, int difficulty) : Creature(1) {
     this->x = x;
     this->y = y;
     direction = DOWN_LOWER_CASE;
-    hoverAbove = BREADCRUMB;
+    hoverAbove = EMPTY;
     this->difficulty = difficulty;
 }
 
@@ -104,7 +104,12 @@ void Ghost::UpdatePosition(Board* board, Cell pacmenPosition) {
 }
 
 void Ghost::moveToStartingPosition(Board* board) {
-    board->setCell(x, y, hoverAbove);
+
+    if (hoverAbove == EMPTY || hoverAbove == BREADCRUMB || hoverAbove == WALL) {
+        board->setCell(x, y, hoverAbove);
+        Game::gotoxy(x, y);
+        cout << hoverAbove << endl;
+    }
     x = initial_x_pos;
     y = initial_y_pos;
     board->setCell(initial_x_pos, initial_y_pos, GHOST_CHAR);

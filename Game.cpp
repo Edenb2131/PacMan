@@ -184,7 +184,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
     bool is_screen_frozen = false;
     int prev_x = x, prev_y = y;
 
-    while (total_score < board->gettotalNumberOfBreadcrumbs()) {
+    while (breadcrumb_score < board->gettotalNumberOfBreadcrumbs()) {
 
         int prev_x = x, prev_y = y;
         char prev_direction = direction;
@@ -211,6 +211,7 @@ GameStatus Game::playOneRound(int x, int y, char direction) {
             board->setCell(prev_x, prev_y, EMPTY);
             boardCell = EMPTY;
             total_score++;
+            breadcrumb_score++;
         }
 
         Game::gotoxy(prev_x, prev_y);

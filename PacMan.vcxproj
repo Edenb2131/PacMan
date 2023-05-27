@@ -173,6 +173,9 @@
   <ItemGroup>
     <ResourceCompile Include="PacMan.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="pacman_d.screen" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

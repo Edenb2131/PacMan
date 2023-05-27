@@ -15,6 +15,7 @@
 #define HEIGHT 25
 #define BREADCRUMB '.'
 #define EMPTY ' '
+#define WALL '#'
 
 class Pacman;
 class FileHandler;

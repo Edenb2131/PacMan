@@ -38,6 +38,7 @@ enum class GameStatus {
 
 class Game {
     int total_score = 0;
+    int breadcrumb_score = 0;
     int difficulty = -1;
     int map_choice = -1;
     Board* board;

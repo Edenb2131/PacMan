@@ -46,8 +46,7 @@ void Creature::move(Board* board, Cell pacmenPosition) {
         int prev_x = x;
         int prev_y = y;
 
-        //TODO: change to use constants.
-        if (hoverAbove == ' ' || hoverAbove == '.' || hoverAbove == '#') {
+        if (hoverAbove == EMPTY || hoverAbove == BREADCRUMB || hoverAbove == WALL) {
             board->setCell(prev_x, prev_y, hoverAbove);
             Game::gotoxy(prev_x, prev_y);
             cout << hoverAbove << endl;

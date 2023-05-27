@@ -95,4 +95,7 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="pacman_d.screen" />
+  </ItemGroup>
 </Project>
