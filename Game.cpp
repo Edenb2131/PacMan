@@ -106,6 +106,8 @@ void Game::start() {
         else if (status == GameStatus::PlayerWon) {
             // Playing continuesly and did not finish the last round (2)
             if (map_choice == 1 && board->GetLevel() < 2) {
+                Sleep(2000);
+
                 board->ChangeToNextMap();
                 breadcrumb_score = 0;
                 
