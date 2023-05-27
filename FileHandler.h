@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include<vector>
 #include "Board.h"
 
 #define BREADCRUMB_IN_FILE ' '
@@ -30,5 +31,9 @@ public:
     void readMapFromFile(Board* board, const std::string &name_of_file);
     char ConvertFileCharaterToBoardCharacter(char ch);
 
+    const std::vector<std::vector<char>>& get() { return _map; }
+
+private:
+    std::vector<std::vector<char>> _map;
 };
 

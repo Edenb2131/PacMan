@@ -6,59 +6,44 @@ using namespace std;
 
 Board::Board(int _lives, int _score, int map_choice) {
 
-    // Making the board size of 25x80
-    board.resize(HEIGHT);
-    for (int i = 0; i < HEIGHT; i++)
-        board[i].resize(WIDTH);
-
     maps.resize(3);
     for ( int i = 0 ; i < 3; i ++){
-        maps[i].did_load = 0;
+        maps[0].readMapFromFile(this, "pacman_a.screen");
+        maps[1].readMapFromFile(this, "pacman_b.screen");
+        maps[2].readMapFromFile(this, "pacman_c.screen");
     }
 
     if(map_choice == 1){ // means we going continuesly throw levels
-        maps[0].readMapFromFile(this, "pacman_a.screen");
-        maps[0].did_load = 1;
-        maps[1].readMapFromFile(this, "pacman_b.screen");
-        maps[1].did_load = 1;
-        maps[2].readMapFromFile(this, "pacman_c.screen");
-        maps[2].did_load = 1;
+        SetMap(0);
     }
     else if(map_choice == 2) {// means we are picking a random level
         int random = rand() % 3;
-        if (random == 0) {
-            maps[0].readMapFromFile(this, "pacman_a.screen");
-            maps[0].did_load = 1;
-        }
-        else if (random == 1) {
-            maps[1].readMapFromFile(this, "pacman_b.screen");
-            maps[1].did_load = 1;
-        }
-        else {
-            maps[2].readMapFromFile(this, "pacman_c.screen");
-            maps[2].did_load = 1;
-        }
+        SetMap(random);
     }
     else if(map_choice == 3) { // means the player choose a spesific map
         int map_number;
         UI::get_players_choice_for_maps(map_number);
 
-        if (map_number == 1) {
-            maps[0].readMapFromFile(this, "pacman_a.screen");
-            maps[0].did_load = 1;
-        }
-        else if (map_number == 2) {
-            maps[1].readMapFromFile(this, "pacman_b.screen");
-            maps[1].did_load = 1;
-        }
-        else {
-            maps[2].readMapFromFile(this, "pacman_c.screen");
-            maps[2].did_load = 1;
-        }
+        SetMap(map_number);
     }
     
 
     print_last_row(_lives, _score);
+}
+
+void Board::SetMap(int mapIndex) {
+    current_map_index = mapIndex;
+
+    // Making the board size of 25x80
+    board.resize(HEIGHT);
+    for (int i = 0; i < HEIGHT; i++)
+        board[i].resize(WIDTH);
+
+    for (int i = 0; i < HEIGHT - 1; i++) {
+        for (int j = 0; j < WIDTH; j++) {
+            this->setCellInvers(i, j, maps[mapIndex].get()[i][j]);
+        }
+    }
     totalNumberOfBreadcrumbs = countTotalNumberOfBreadcrumbs();
 }
 

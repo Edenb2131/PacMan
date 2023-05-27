@@ -18,6 +18,11 @@ FileHandler::~FileHandler() {}
 void FileHandler::readMapFromFile(Board* board, const string &name_of_file) {
     ifstream file(name_of_file);
     
+    _map.reserve(HEIGHT);
+    for (auto& row : _map) {
+        row.reserve(WIDTH);
+    }
+
     if (!file.is_open()) {
         cout << "Error opening file" << endl;
         exit(1);
@@ -32,13 +37,15 @@ void FileHandler::readMapFromFile(Board* board, const string &name_of_file) {
 
     // set the board
     for(int i = 0; i < HEIGHT - 1; i++) {
+        _map.push_back(std::vector<char>());
         for(int j = 0; j < WIDTH; j++) {
             char convertedChar = ConvertFileCharaterToBoardCharacter(lines[i][j]);
-            board->setCellInvers(i, j, convertedChar);
+            _map[i].push_back(convertedChar);
         }
         cout << endl;
     } 
     file.close();   
+    did_load = 1;
 }
 
 char FileHandler::ConvertFileCharaterToBoardCharacter(char ch) {

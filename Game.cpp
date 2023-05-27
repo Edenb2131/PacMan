@@ -21,6 +21,7 @@ Game::Game(int difficulty): difficulty(difficulty) {
     creatureManager = new CreatureManagar(ghostsCells, difficulty);
     board->getPacManStaringPostion(pacman);
     total_score = 0;
+    breadcrumb_score = 0;
 }
 
 Game::~Game() {
@@ -103,12 +104,21 @@ void Game::start() {
             Sleep(2000);
         }
         else if (status == GameStatus::PlayerWon) {
-
-            if (map_choice == 1) {
+            // Playing continuesly and did not finish the last round (2)
+            if (map_choice == 1 && board->GetLevel() < 2) {
+                board->ChangeToNextMap();
+                breadcrumb_score = 0;
                 
+                board->getPacManStaringPostion(pacman);
+                
+                // Reset all creatures according to the new board.
+                delete creatureManager;
+                vector<Cell> ghostsCells = board->getGhostsStartingPosition();
+                creatureManager = new CreatureManagar(ghostsCells, difficulty);
             }
-
-            didPlayerWin = true;
+            else {
+                didPlayerWin = true;
+            }
         }
     }
 

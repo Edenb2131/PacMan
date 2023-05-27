@@ -25,6 +25,7 @@ class Board {
     vector<vector<char>> board;
     int totalNumberOfBreadcrumbs;
     vector<FileHandler> maps;
+    int current_map_index;
 public:
 
     Board(int _lives, int _score, int map_choice);
@@ -38,7 +39,11 @@ public:
     int gettotalNumberOfBreadcrumbs() const { return totalNumberOfBreadcrumbs; }
     int countTotalNumberOfBreadcrumbs() const;
     std::vector<Cell> getGhostsStartingPosition() const;
-    void getPacManStaringPostion(Pacman* pacman) ;
+    void getPacManStaringPostion(Pacman* pacman);
+
+    void SetMap(int mapIndex);
+    void ChangeToNextMap() { current_map_index++; SetMap(current_map_index); };
+    int GetLevel() { return current_map_index; }
 };
 
 
