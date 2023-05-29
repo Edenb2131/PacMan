@@ -7,7 +7,7 @@
 #include "FileHandler.h"
 using namespace std;
 
-void clrscreen();                                                             // prototype
+void clrscreen();  // prototype
 void updateBoardAndScreen(int x, int y, Board* board, Fruit* fruit, char ch); // prototype
 
 Game::Game(int difficulty): difficulty(difficulty) {
@@ -70,6 +70,10 @@ void Game::getDifficultyFromUser(){
 void Game::start() {
     // Start the game
     bool didPlayerWin = false;
+
+   
+    //////// NEED TO FIX MAP_CHOICE = 1 MEAING WHEN YOU WANT TO PLAY CONTINUSELY /////////
+
 
     // Main game loop
     while (!isGameFinished(didPlayerWin)) {

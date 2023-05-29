@@ -24,7 +24,8 @@ char Fruit::GetCreatureChar(){
     if (fruitValue <= 9 && fruitValue >= 5) {
         return '0' + fruitValue;
     }
-    return '5'; // defullt key
+    return '5';
+    //TODO: why 5? - if there is a problem, that we will get a difult value no ?
 }
 
 void Fruit::moveToStartingPosition(Board* board)

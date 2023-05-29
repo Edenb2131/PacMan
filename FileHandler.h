@@ -1,7 +1,4 @@
 #pragma once
-
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -30,7 +27,7 @@ public:
     // operator overloading
     FileHandler& operator=(const FileHandler& other);
 
-    static bool checkIfmapExists(const std::string& name_of_map);
+
     void readMapFromFile(Board* board, const std::string &name_of_file);
     char ConvertFileCharaterToBoardCharacter(char ch);
 
