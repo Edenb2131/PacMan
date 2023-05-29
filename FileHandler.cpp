@@ -15,6 +15,17 @@ FileHandler::FileHandler() { did_load = -1;}
 
 FileHandler::~FileHandler() {}
 
+bool FileHandler::checkIfmapExists(const string& name_of_map)
+{
+    if (FILE* file = fopen(name_of_map.c_str(), "r")) {
+        fclose(file);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void FileHandler::readMapFromFile(Board* board, const string &name_of_file) {
     ifstream file(name_of_file);
     

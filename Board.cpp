@@ -4,27 +4,108 @@
 using namespace std;
 
 
+bool checkIfMapExist(const string& map_name1 , const string& map_name2) {
+    if (FileHandler::checkIfmapExists(map_name1) || FileHandler::checkIfmapExists(map_name2)) {
+        return true;
+    }
+    return false;
+}
+
+
 Board::Board(int _lives, int _score, int map_choice) {
 
     maps.resize(3);
-    for ( int i = 0 ; i < 3; i ++){
-        maps[0].readMapFromFile(this, "pacman_a.screen");
-        maps[1].readMapFromFile(this, "pacman_b.screen");
-        maps[2].readMapFromFile(this, "pacman_c.screen");
-    }
+
+//    for ( int i = 0 ; i < 3; i ++){
+//        maps[0].readMapFromFile(this, "pacman_a.screen");
+//        maps[1].readMapFromFile(this, "pacman_b.screen");
+//        maps[2].readMapFromFile(this, "pacman_c.screen");
+//    }
 
     if(map_choice == 1){ // means we going continuesly throw levels
-        SetMap(0);
+
+
+        if (checkIfMapExist("pacman_a.screen", "pacman_01.screen")) {
+            if (checkIfMapExist("pacman_b.screen", "pacman_02.screen")) {
+                if (checkIfMapExist("pacman_c.screen", "pacman_03.screen")) {
+                    maps[0].readMapFromFile(this, "pacman_a.screen");
+                    maps[1].readMapFromFile(this, "pacman_b.screen");
+                    maps[2].readMapFromFile(this, "pacman_c.screen");
+                    SetMap(0);
+                }
+            }
+        }
+
+        else {
+            cout << " The maps you are looking for are not here.";
+            exit(1);
+        }
+
+//        SetMap(0);
     }
     else if(map_choice == 2) {// means we are picking a random level
         int random = rand() % 3;
-        SetMap(random);
+
+        if (random == 0) {
+            if (checkIfMapExist("pacman_a.screen", "pacman_01.screen")) {
+                maps[random].readMapFromFile(this, "pacman_a.screen");
+                SetMap(random);
+            }
+        }
+
+        else if (random == 1) {
+            if (checkIfMapExist("pacman_b.screen", "pacman_02.screen")) {
+                maps[random].readMapFromFile(this, "pacman_b.screen");
+                SetMap(random);
+            }
+        }
+
+        else if (random == 2) {
+            if (checkIfMapExist("pacman_c.screen", "pacman_02.screen")) {
+                maps[random].readMapFromFile(this, "pacman_c.screen");
+                SetMap(random);
+            }
+        }
+
+        else {
+            cout << " The map you are looking for are not here.";
+            exit(1);
+        }
+
+//        SetMap(random);
     }
     else if(map_choice == 3) { // means the player choose a spesific map
         int map_number;
         UI::get_players_choice_for_maps(map_number);
 
-        SetMap(map_number);
+        if (map_number == 1) {
+            if (checkIfMapExist("pacman_a.screen", "pacman_01.screen")) {
+                maps[map_number - 1].readMapFromFile(this, "pacman_a.screen");
+                SetMap(map_number - 1);
+            }
+        }
+
+        else if (map_number == 2) {
+            if (checkIfMapExist("pacman_b.screen", "pacman_02.screen")) {
+                maps[map_number - 1].readMapFromFile(this, "pacman_b.screen");
+                SetMap(map_number - 1);
+            }
+        }
+
+        else if (map_number == 3) {
+            if (checkIfMapExist("pacman_c.screen", "pacman_02.screen")) {
+                maps[map_number - 1].readMapFromFile(this, "pacman_c.screen");
+                SetMap(map_number - 1);
+            }
+        }
+
+        else {
+            cout << " The map you are looking for are not here.";
+            exit(1);
+        }
+
+
+//        SetMap(map_number);
     }
     
 
