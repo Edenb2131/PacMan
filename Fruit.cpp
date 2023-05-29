@@ -3,9 +3,9 @@
 
 using namespace std;
 
-Fruit::Fruit() : Creature(4)
+Fruit::Fruit(const Board* board) : Creature(4)
 {
-    ResetFruit();
+    ResetFruit(board);
     hoverAbove = ' ';
     direction = DOWN_LOWER_CASE;
 }
@@ -13,10 +13,6 @@ Fruit::Fruit() : Creature(4)
 Fruit::Fruit(int x, int y, int speed) : Creature(x, y, speed)
 {
     fruitValue = rand() % 5 + 5;
-}
-
-Fruit::~Fruit()
-{
 }
 
 char Fruit::GetCreatureChar(){
@@ -32,18 +28,21 @@ void Fruit::moveToStartingPosition(Board* board)
     board->setCell(Creature::getX(), Creature::getY(), fruitValue);
 }
 
-// TODO: get board, if on # then random again. If over '.' then fix 'hover_above'.
-void Fruit::ResetFruit() {
-    x = rand() % 70 + 1;
-    y = rand() % 20 + 1;
+void Fruit::ResetFruit(const Board* board) {
+    const static array<char, 3> disallowed_locations = { WALL, GHOST_CHAR, PACMAN_CHAR};
+    do {
+        x = rand() % 70 + 1;
+        y = rand() % 20 + 1;
+    } while (std::find(disallowed_locations.begin(), disallowed_locations.end(), board->getCell(x, y)) != disallowed_locations.end());
     fruitValue = rand() % 5 + 5;
     cycle_time = FRUIT_CYCLE_TIME;
+    hoverAbove = board->getCell(x, y);
 }
 
 void Fruit::UpdatePosition(Board* board, Cell pacmenPosition)
 {
     if (cycle_time == 0) {
-        ResetFruit();
+        ResetFruit(board);
         return;
     }
     cycle_time--;

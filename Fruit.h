@@ -21,9 +21,9 @@ protected:
 public:
     
 
-    void ResetFruit();
+    void ResetFruit(const Board* board);
 
-    Fruit();
+    Fruit(const Board* board);
     Fruit(int x, int y, int speed);
     ~Fruit();
     int get_fruit_value() {return fruitValue;}

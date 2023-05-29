@@ -18,7 +18,7 @@ Game::Game(int difficulty): difficulty(difficulty) {
 
     board = new Board(pacman->get_lives(), total_score, map_choice);
     vector<Cell> ghostsCells = board->getGhostsStartingPosition();
-    creatureManager = new CreatureManagar(ghostsCells, difficulty);
+    creatureManager = new CreatureManagar(board, ghostsCells, difficulty);
     board->getPacManStaringPostion(pacman);
     total_score = 0;
     breadcrumb_score = 0;
@@ -116,7 +116,7 @@ void Game::start() {
                 // Reset all creatures according to the new board.
                 delete creatureManager;
                 vector<Cell> ghostsCells = board->getGhostsStartingPosition();
-                creatureManager = new CreatureManagar(ghostsCells, difficulty);
+                creatureManager = new CreatureManagar(board, ghostsCells, difficulty);
             }
             else {
                 didPlayerWin = true;

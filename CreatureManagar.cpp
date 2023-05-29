@@ -1,12 +1,12 @@
 #include "CreatureManagar.h"
 
-CreatureManagar::CreatureManagar(std::vector<Cell>& cellsOfGhosts, int difficulty, int amountOfFruits) {
+CreatureManagar::CreatureManagar(const Board* board, std::vector<Cell>& cellsOfGhosts, int difficulty, int amountOfFruits) {
 	for (int i = 0; i < cellsOfGhosts.size(); i++) {
 		Ghost* newGhost = new Ghost(cellsOfGhosts[i].getX(), cellsOfGhosts[i].getY(), difficulty);
 		ghosts.push_back(newGhost);
 	}
 	for (int i = 0; i < amountOfFruits; i++) {
-		fruits.push_back(new Fruit());
+		fruits.push_back(new Fruit(board));
 	}
 }
 
@@ -55,13 +55,13 @@ bool CreatureManagar::moveAndCheckCollision(int prev_pacman_x_pos, int prev_pacm
 			didCollideWithFruit = true;
 			addedFruitScore += fruit->get_fruit_value();
 			fruit->disappear(board);
-			fruit->ResetFruit();
+			fruit->ResetFruit(board);
 		}
 		for (const GostPositions& ghost : ghosts_positions) {
 			bool didGhostCollideWithCurrentFruit = DidCollide(fruit_prev, fruit_curr, ghost.prev, ghost.curr);
 			if (didGhostCollideWithCurrentFruit) {
 				fruit->disappear(board);
-				fruit->ResetFruit();
+				fruit->ResetFruit(board);
 				break;
 			}
 		}
