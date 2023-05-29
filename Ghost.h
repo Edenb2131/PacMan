@@ -23,7 +23,6 @@ public:
 
     Ghost(int x, int y, int difficulty);
 
-    // TODO: move to ghost manager
     void moveToStartingPosition(Board* board);
 };
 

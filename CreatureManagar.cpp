@@ -15,7 +15,9 @@ CreatureManagar::~CreatureManagar() {
 		delete(ghosts[i]);
 }
 
-// TODO: move somewhere else
+// A struct to keep track of all ghosts positions before and after moving.
+// This is an internal implementation requirement of `moveAndCheckCollision`,
+// and therefore kept in the .cpp file.
 struct GostPositions {
 	Cell prev;
 	Cell curr;

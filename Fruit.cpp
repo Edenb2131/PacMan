@@ -24,8 +24,7 @@ char Fruit::GetCreatureChar(){
     if (fruitValue <= 9 && fruitValue >= 5) {
         return '0' + fruitValue;
     }
-    return '5';
-    //TODO: why 5? - if there is a problem, that we will get a difult value no ?
+    return '5'; // default value.
 }
 
 void Fruit::moveToStartingPosition(Board* board)
@@ -38,7 +37,7 @@ void Fruit::ResetFruit() {
     x = rand() % 70 + 1;
     y = rand() % 20 + 1;
     fruitValue = rand() % 5 + 5;
-    cycle_time = FRUIT_CYCLE_TIME;    //TODO: make not arab ??????
+    cycle_time = FRUIT_CYCLE_TIME;
 }
 
 void Fruit::UpdatePosition(Board* board, Cell pacmenPosition)

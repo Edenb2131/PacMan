@@ -6,7 +6,6 @@
 class Creature
 {
 protected:
-	// TODO: change to Cell.
 	int x;
 	int y;
 	int shouldUpdate;
@@ -20,7 +19,7 @@ public:
 	char direction;
 	char hoverAbove;
 
-	Creature(int moveFrequency); // TODO: Move to factory.
+	Creature(int moveFrequency);
 	Creature(int x, int y, int moveFrequency);
 	~Creature();
 
