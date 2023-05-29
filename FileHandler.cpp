@@ -15,6 +15,11 @@ FileHandler::FileHandler() { did_load = -1;}
 
 FileHandler::~FileHandler() {}
 
+bool FileHandler::CheckFile(const std::string& file_name) {
+    ifstream f(file_name.c_str());
+    return f.good();
+}
+
 void FileHandler::readMapFromFile(Board* board, const string &name_of_file) {
     ifstream file(name_of_file);
     

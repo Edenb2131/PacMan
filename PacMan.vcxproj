@@ -165,7 +165,6 @@
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="pacman_a.screen" />
     <Text Include="pacman_b.screen" />
     <Text Include="pacman_c.screen" />
     <Text Include="README.txt" />
@@ -174,7 +173,7 @@
     <ResourceCompile Include="PacMan.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="pacman_d.screen" />
+    <None Include="pacman_a.screen" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

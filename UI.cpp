@@ -38,19 +38,13 @@ int UI::get_players_choice_for_maps() {
     return choice;
 }
 
-void UI::get_players_choice_for_maps(int &choice) {
+std::string UI::get_map_name() {
     
-    cout << "Please enter the number of the map you wish to play on: " << endl;
-    cout << "1. Map 1" << endl;	
-    cout << "2. Map 2" << endl;
-    cout << "3. Map 3" << endl;
-    cin >> choice;
-
-        while (choice != BEST && choice != GOOD && choice != NOVICE) {
-        cout << "Invalid choice. Please try again." << endl;
-        cin >> choice;
-    }
-
+    cout << "Please enter the name of the selected screen: ";
+    std::string result;
+    cin >> result;
+    cout << "\nLoading screen " << result;
+    return result;
 }
 
 

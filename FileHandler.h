@@ -33,6 +33,8 @@ public:
 
     const std::vector<std::vector<char>>& get() { return _map; }
 
+    static bool CheckFile(const std::string& file_name);
+
 private:
     std::vector<std::vector<char>> _map;
 };

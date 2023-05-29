@@ -9,7 +9,7 @@ public:
 	static int get_players_choice();
 	static int get_players_choice_for_diff();
 	static int get_players_choice_for_maps();
-	static void get_players_choice_for_maps(int &choice);
+	static std::string get_map_name();
 	static void print_menu();
 	static void print_difficulty_menu();
 	static void print_InstAndKeys();

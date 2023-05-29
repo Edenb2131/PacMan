@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
-    <Text Include="pacman_a.screen" />
     <Text Include="pacman_b.screen" />
     <Text Include="pacman_c.screen" />
   </ItemGroup>
@@ -96,6 +95,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="pacman_d.screen" />
+    <None Include="pacman_a.screen" />
   </ItemGroup>
 </Project>

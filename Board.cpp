@@ -1,30 +1,40 @@
 #include "Board.h"
 #include <iostream>
 #include "Game.h"
+#include<windows.h>
 using namespace std;
 
 
 Board::Board(int _lives, int _score, int map_choice) {
 
-    maps.resize(3);
-    for ( int i = 0 ; i < 3; i ++){
-        maps[0].readMapFromFile(this, "pacman_a.screen");
-        maps[1].readMapFromFile(this, "pacman_b.screen");
-        maps[2].readMapFromFile(this, "pacman_c.screen");
-    }
-
-    if(map_choice == 1){ // means we going continuesly throw levels
-        SetMap(0);
-    }
-    else if(map_choice == 2) {// means we are picking a random level
-        int random = rand() % 3;
-        SetMap(random);
+    
+    if (map_choice == 1 || map_choice == 2) {
+        maps.resize(3);
+        for (int i = 0; i < 3; i++) {
+            maps[0].readMapFromFile(this, "pacman_a.screen");
+            maps[1].readMapFromFile(this, "pacman_b.screen");
+            maps[2].readMapFromFile(this, "pacman_c.screen");
+        }
+        if (map_choice == 1) { // means we going continuesly throw levels
+            SetMap(0);
+        }
+        else if (map_choice == 2) {// means we are picking a random level
+            int random = rand() % 3;
+            SetMap(random);
+        }
     }
     else if(map_choice == 3) { // means the player choose a spesific map
-        int map_number;
-        UI::get_players_choice_for_maps(map_number);
-
-        SetMap(map_number);
+        string map_name = UI::get_map_name();
+        maps.resize(1);
+        if (!FileHandler::CheckFile(map_name)) {
+            cout << "\nFile does not exist. Loading file #1.\n";
+            maps[0].readMapFromFile(this, "pacman_a.screen");
+            Sleep(3000);
+        }
+        else {
+            maps[0].readMapFromFile(this, map_name);
+        }
+        SetMap(0);
     }
     
 
